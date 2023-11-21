@@ -1,18 +1,26 @@
 <script setup>
 import { ref, inject } from 'vue'
+import {useToast} from 'vue-toast-notification';
 
 const socket = inject('socket')
+const toast = useToast()
 
 const message = ref('DAD Intermediate Submission')
 const responseData = ref('')
 
 const send = () => {
-    socket.emit('echo', message.value)
+    socket.emit('sent', message.value)
+    
 }
 
-socket.on('echo', (message) => {
-    responseData.value = message
+socket.on('echo', (received) => {
+    responseData.value = received
+    toast.success(`${responseData.value} RECEIVED`)
 })
+
+        
+
+
 </script>
 
 <template>
