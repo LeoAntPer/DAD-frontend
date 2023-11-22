@@ -10,7 +10,7 @@ import ToastPlugin from 'vue-toast-notification';
 
 const app = createApp(App)
 
-const apiDomain = import.meta.env.VITE_API_DOMAIN
+const apiDomain = "http://dad-backend.test"
 const wsConnection = import.meta.env.VITE_WS_CONNECTION
 
 app.provide('socket', io(wsConnection))
