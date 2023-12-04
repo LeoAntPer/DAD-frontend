@@ -38,9 +38,11 @@ const clickMenuOption = () => {
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"><i class="bi bi-box-arrow-in-right"></i>
+            <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
+              @click="clickMenuOption">
+              <i class="bi bi-box-arrow-in-right"></i>
               Login
-            </a>
+            </router-link>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -135,10 +137,11 @@ const clickMenuOption = () => {
                       <i class="bi bi-person-square"></i>Profile</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#">
+                    <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                      :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
                       <i class="bi bi-key-fill"></i>
                       Change password
-                    </a>
+                    </router-link>
                   </li>
                   <li>
                     <hr class="dropdown-divider">
