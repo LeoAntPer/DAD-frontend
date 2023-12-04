@@ -78,16 +78,10 @@ const clickMenuOption = () => {
                 Dashboard
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-list-stars"></i>
-                Current Tasks
-              </a>
-            </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
               <a class="nav-link w-100 me-3" href="#">
                 <i class="bi bi-list-check"></i>
-                Tasks
+                Transferências
               </a>
               <a class="link-secondary" href="#" aria-label="Add a new task">
                 <i class="bi bi-xs bi-plus-circle"></i>
@@ -96,44 +90,13 @@ const clickMenuOption = () => {
             <li class="nav-item">
               <a class="nav-link" href="#">
                 <i class="bi bi-files"></i>
-                Projects
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-people"></i>
-                Team Members
+                Categorias
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
                 <i class="bi bi-bar-chart-line"></i>
-                Reports
-              </a>
-            </li>
-          </ul>
-
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>My Projects</span>
-            <a class="link-secondary" href="#" aria-label="Add a new project">
-              <i class="bi bi-xs bi-plus-circle"></i>
-            </a>
-          </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-file-ruled"></i>
-                Some project
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"><i class="bi bi-file-ruled"></i>
-                Another project
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"><i class="bi bi-file-ruled"></i>
-                Yet another project
+                Estisticas
               </a>
             </li>
           </ul>
