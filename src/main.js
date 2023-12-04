@@ -1,12 +1,14 @@
 import axios from 'axios'
 import { io } from 'socket.io-client'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import "bootstrap-icons/font/bootstrap-icons.css"
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'bootstrap'
 
 import { createApp } from 'vue'
 import App from './App.vue'
 import ToastPlugin from 'vue-toast-notification';
+import router from './router'
 
 const app = createApp(App)
 
@@ -26,4 +28,5 @@ app.provide(
 )
 app.provide('serverBaseUrl', apiDomain)
 app.use(ToastPlugin);
+app.use(router)
 app.mount('#app')
