@@ -24,8 +24,9 @@ const clickMenuOption = () => {
         <img src="@/assets/logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
         App name
       </a>
-      <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse" @click="clickMenuOption"
-        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        @click="clickMenuOption" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+        aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -52,7 +53,11 @@ const clickMenuOption = () => {
                 <a class="dropdown-item" href="#"><i class="bi bi-person-square"></i>Profile</a>
               </li>
               <li>
-                <a class="dropdown-item" href="#"><i class="bi bi-key-fill"></i>Change password</a>
+                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                  :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change password
+                </router-link>
               </li>
               <li>
                 <hr class="dropdown-divider">
@@ -79,19 +84,22 @@ const clickMenuOption = () => {
               </router-link>
             </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-            <router-link class="nav-link" :class="{ active: $route.name === 'Transactions' }" :to="{ name: 'Transactions' }">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Transactions' }"
+                :to="{ name: 'Transactions' }">
                 <i class="bi bi-files"></i>
                 Transferências
               </router-link>
             </li>
             <li class="nav-item">
-            <router-link class="nav-link" :class="{ active: $route.name === 'Categories' }" :to="{ name: 'Categories' }">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Categories' }"
+                :to="{ name: 'Categories' }">
                 <i class="bi bi-files"></i>
                 Categorias
               </router-link>
             </li>
             <li class="nav-item">
-            <router-link class="nav-link" :class="{ active: $route.name === 'Statistics' }" :to="{ name: 'Statistics' }">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Statistics' }"
+                :to="{ name: 'Statistics' }">
                 <i class="bi bi-files"></i>
                 Estatisticas
               </router-link>
@@ -109,10 +117,11 @@ const clickMenuOption = () => {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
+                  @click="clickMenuOption">
                   <i class="bi bi-box-arrow-in-right"></i>
                   Login
-                </a>
+                </router-link>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
