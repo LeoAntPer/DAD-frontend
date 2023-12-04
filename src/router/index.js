@@ -1,22 +1,64 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../components/Dashboard.vue'
+import Transaction from "../components/transactions/Transaction.vue"
+import Transactions from "../components/transactions/Transactions.vue"
+import Category from "../components/categories/Category.vue"
+import Categories from "../components/categories/Categories.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
+      path: '/dashboard',
+      name: 'Dashboard',
       component: Dashboard
     },
+
+    //Transaction
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+      path: '/transaction/new',
+      name: 'NewTransaction',
+      component: Transaction,
+      props: { id: -1 }
+    },
+    {
+      path: '/transactions/:id',
+      name: 'Transaction',
+      component: Transaction,
+      props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/transactions',
+      name: 'Transactions',
+      component: Transactions,
+    },
+
+    //Categories
+    {
+      path: '/category/new',
+      name: 'NewCategory',
+      component: Transaction,
+      props: { id: -1 }
+    },
+    {
+      path: '/categories/:id',
+      name: 'Category',
+      component: Category,
+      props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/categories',
+      name: 'Categories',
+      component: Categories,
+    },
+
+    //
+    {
+      path: '/statistics',
+      name: 'Statistics',
+      component: Categories,
+    },
+
   ]
 })
 

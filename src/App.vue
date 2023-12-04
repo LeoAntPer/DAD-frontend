@@ -1,7 +1,7 @@
 <script setup>
+import { useRouter, RouterLink, RouterView } from 'vue-router'
 //import LaravelTester from './components/LaravelTester.vue';
 //import WebSocketTester from './components/WebSocketTester.vue';
-import { RouterView } from 'vue-router'
 
 
 //const router = useRouter()
@@ -73,31 +73,28 @@ const clickMenuOption = () => {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }" :to="{ name: 'Dashboard' }">
                 <i class="bi bi-house"></i>
                 Dashboard
-              </a>
+              </router-link>
             </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-              <a class="nav-link w-100 me-3" href="#">
-                <i class="bi bi-list-check"></i>
+            <router-link class="nav-link" :class="{ active: $route.name === 'Transactions' }" :to="{ name: 'Transactions' }">
+                <i class="bi bi-files"></i>
                 Transferências
-              </a>
-              <a class="link-secondary" href="#" aria-label="Add a new task">
-                <i class="bi bi-xs bi-plus-circle"></i>
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+            <router-link class="nav-link" :class="{ active: $route.name === 'Categories' }" :to="{ name: 'Categories' }">
                 <i class="bi bi-files"></i>
                 Categorias
-              </a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-bar-chart-line"></i>
-                Estisticas
-              </a>
+            <router-link class="nav-link" :class="{ active: $route.name === 'Statistics' }" :to="{ name: 'Statistics' }">
+                <i class="bi bi-files"></i>
+                Estatisticas
+              </router-link>
             </li>
           </ul>
 
