@@ -80,28 +80,28 @@ const clickMenuOption = () => {
           <ul class="nav flex-column">
             <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }" :to="{ name: 'Dashboard' }">
-                <i class="bi bi-house"></i>
+                <i class="bi bi-bank"></i>
                 Dashboard
               </router-link>
             </li>
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+            <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Transactions' }"
                 :to="{ name: 'Transactions' }">
-                <i class="bi bi-files"></i>
+                <i class="bi bi-wallet2"></i>
                 Transferências
               </router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Categories' }"
                 :to="{ name: 'Categories' }">
-                <i class="bi bi-files"></i>
+                <i class="bi bi-list-task"></i>
                 Categorias
               </router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Statistics' }"
                 :to="{ name: 'Statistics' }">
-                <i class="bi bi-files"></i>
+                <i class="bi bi-graph-up"></i>
                 Estatisticas
               </router-link>
             </li>
