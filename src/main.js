@@ -5,6 +5,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'bootstrap'
 
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
 import ToastPlugin from 'vue-toast-notification';
@@ -15,7 +16,7 @@ const app = createApp(App)
 const apiDomain = import.meta.env.VITE_API_DOMAIN
 const wsConnection = import.meta.env.VITE_WS_CONNECTION
 
-app.provide('socket', io(wsConnection))
+//app.provide('socket', io(wsConnection))
 
 app.provide(
   'axios',
@@ -29,4 +30,5 @@ app.provide(
 app.provide('serverBaseUrl', apiDomain)
 app.use(ToastPlugin);
 app.use(router)
+app.use(createPinia())
 app.mount('#app')

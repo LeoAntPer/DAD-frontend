@@ -1,11 +1,17 @@
 <script setup>
 import { useRouter, RouterLink, RouterView } from 'vue-router'
+import { useUserStore } from './stores/user';
+import { onMounted } from 'vue'
+import { useToast } from 'vue-toast-notification'
 //import LaravelTester from './components/LaravelTester.vue';
 //import WebSocketTester from './components/WebSocketTester.vue';
 
 
-//const router = useRouter()
+const router = useRouter()
 
+const toast = useToast()
+
+const userStore = useUserStore()
 
 const clickMenuOption = () => {
   const domReference = document.getElementById('buttonSidebarExpandId')
@@ -15,6 +21,22 @@ const clickMenuOption = () => {
     }
   }
 }
+
+
+const logout = async () => {
+  if (await userStore.logout()) {
+    toast.success('User has logged out of the application.')
+    clickMenuOption()
+    router.push({ name: 'home' })
+  } else {
+    toast.error('There was a problem logging out of the application!')
+  }
+}
+
+onMounted(() => {
+  userStore.restoreToken()
+})
+
 </script>
 
 <template>
@@ -32,22 +54,23 @@ const clickMenuOption = () => {
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
-          <li class="nav-item">
+          <li class="nav-item" v-show="!userStore.user">
             <a class="nav-link" href="#"><i class="bi bi-person-check-fill"></i>
               Register
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
               @click="clickMenuOption">
               <i class="bi bi-box-arrow-in-right"></i>
               Login
             </router-link>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" v-show="userStore.user">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="avatar-text">User Name</span>
+              <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
+              <span class="avatar-text">{{ userStore.userName }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               <li>
@@ -64,7 +87,7 @@ const clickMenuOption = () => {
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <a class="dropdown-item" href="#"><i class="bi bi-arrow-right"></i>Logout</a>
+                <a class="dropdown-item" @click.prevent="logout"><i class="bi bi-arrow-right"></i>Logout</a>
               </li>
             </ul>
           </li>
@@ -129,18 +152,18 @@ const clickMenuOption = () => {
                   Register
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" v-show="!userStore.user">
                 <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
                   @click="clickMenuOption">
                   <i class="bi bi-box-arrow-in-right"></i>
                   Login
                 </router-link>
               </li>
-              <li class="nav-item dropdown">
+              <li class="nav-item dropdown" v-show="userStore.user">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
-                  <span class="avatar-text">User Name</span>
+                  <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
+                  <span class="avatar-text">{{ userStore.userName }}</span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
                   <li>
@@ -157,9 +180,11 @@ const clickMenuOption = () => {
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="#">
+                  <li v-show="userStore.user">
+                    <a class="dropdown-item" @click.prevent="logout">
                       <i class="bi bi-arrow-right"></i>Logout
-                    </a></li>
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
