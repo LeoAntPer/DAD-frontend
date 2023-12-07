@@ -130,7 +130,7 @@ onMounted(() => {
               <router-link class="nav-link" :class="{ active: $route.name === 'Categories' }"
                 :to="{ name: 'Categories' }">
                 <i class="bi bi-list-task"></i>
-                Categorias
+                Categories
               </router-link>
             </li>
             <li class="nav-item">
