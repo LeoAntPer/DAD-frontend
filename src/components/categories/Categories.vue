@@ -3,9 +3,10 @@ import CategoryTable from './CategoryTable.vue'
 import { useCategoryStore } from '../../stores/category'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
 
 const router = useRouter()
-
+const toast = useToast()
 const categoryStore = useCategoryStore()
 
 const loadCategories = async () => {
@@ -30,6 +31,30 @@ const addCategory = () => {
     router.push({ name: 'NewCategory' })
 }
 
+const editCategory = (category) => {
+  router.push({ name: 'Category', params: { id: category.id } })
+}
+
+const categoryToDelete = ref(null)
+const categoryToDeleteDescription = computed(() => {
+  return categoryToDelete.value ? `#${categoryToDelete.value.id} (${categoryToDelete.value.name})` : ""
+})
+const deleteConfirmationDialog = ref(null)
+
+const deleteCategory = (project) => {
+  categoryToDelete.value = project
+  deleteConfirmationDialog.value.show()
+}
+
+const deleteCategoryConfirmed = async () => {
+  try {
+    await categoryStore.deleteCategory(categoryToDelete.value)
+    toast.info(`Category ${categoryToDeleteDescription.value} was deleted`)
+  } catch (error) {
+    console.log(error)
+    toast.error(`It was not possible to delete Category ${categoryToDeleteDescription.value}!`)
+  }  
+}
 
 
 onMounted(() => {
@@ -39,6 +64,13 @@ onMounted(() => {
 </script>
 
 <template>
+  <confirmation-dialog
+    ref="deleteConfirmationDialog"
+    confirmationBtn="Delete category"
+    :msg="`Do you really want to delete the category ${categoryToDeleteDescription}?`"
+    @confirmed="deleteCategoryConfirmed"
+  >
+  </confirmation-dialog>
   <div class="d-flex justify-content-between">
     <div class="mx-2">
       <h3 class="mt-4">Categories</h3>
@@ -57,15 +89,6 @@ onMounted(() => {
         <option value="C">Credit</option>
       </select>
     </div>
-    <!--
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label for="selectOwner" class="form-label">Filter by owner:</label>
-      <select class="form-select" id="selectOwner">
-        <option :value="null"></option>
-        <option>users</option>
-      </select>
-    </div>
-    -->
     <div class="mx-2 mt-2">
       <button type="button" class="btn btn-success px-4 btn-addprj" @click="addCategory">
         <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add
@@ -74,7 +97,12 @@ onMounted(() => {
     </div>
   </div>
   <h5 v-if="totalCategories == 0">You have no categories</h5>
-  <category-table :categories="filteredCategories" v-if="totalCategories != 0"></category-table>
+  <category-table v-else
+   :categories="filteredCategories"
+   @edit="editCategory"
+   @delete="deleteCategory"
+   >
+   </category-table>
 </template>
 
 

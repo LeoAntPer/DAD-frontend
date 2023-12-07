@@ -9,6 +9,16 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['edit', 'delete'])
+
+const editClick = (category) => {
+  emit('edit', category)
+}
+
+const deleteClick = (category) => {
+  emit('delete', category)
+}
+
 </script>
 
 <template>
@@ -26,10 +36,11 @@ const props = defineProps({
         <td>{{ category.type == 'D' ? 'Debit' : 'Credit' }}</td>
         <td class="text-end">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light"><i
+            <button class="btn btn-xs btn-light" @click="editClick(category)"><i
                 class="bi bi-xs bi-pencil"></i>
             </button>
-            <button class="btn btn-xs btn-light"><i
+            &nbsp;
+            <button class="btn btn-xs btn-light" @click="deleteClick(category)"><i
                 class="bi bi-xs bi-x-square-fill"></i>
             </button>
           </div>

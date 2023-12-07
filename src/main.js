@@ -10,6 +10,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import ToastPlugin from 'vue-toast-notification';
 import router from './router'
+import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
+import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
 
 const app = createApp(App)
 
@@ -31,4 +33,6 @@ app.provide('serverBaseUrl', apiDomain)
 app.use(ToastPlugin);
 app.use(router)
 app.use(createPinia())
+app.component('ConfirmationDialog', ConfirmationDialog)
+app.component('FieldErrorMessage', FieldErrorMessage)
 app.mount('#app')

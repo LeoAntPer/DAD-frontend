@@ -45,6 +45,47 @@ export const useCategoryStore = defineStore('category', () => {
         ).length
     }
 
+    async function insertCategory(newCategory) {
+        // Note that when an error occours, the exception should be
+        // catch by the function that called the insertProject
+        const response = await axios.post('categories', newCategory)
+        categories.value.push(response.data.data)
+        //socket.emit('newProject', response.data.data)
+        return response.data.data
+    }
+
+    function updateCategoryOnArray(category) {
+        let idx = categories.value.findIndex((t) => t.id === category.id)
+        if (idx >= 0) {
+            categories.value[idx] = category
+        }
+    }
+
+    async function updateCategory(updateCategory) {
+        // Note that when an error occours, the exception should be
+        // catch by the function that called the updateProject
+        const response = await axios.put('categories/' + updateCategory.id, updateCategory)
+        updateCategoryOnArray(response.data.data)
+        //socket.emit('updateProject', response.data.data)
+        return response.data.data
+    }
+
+    function deleteCategoryOnArray(category) {
+        let idx = categories.value.findIndex((t) => t.id === category.id)
+        if (idx >= 0) {
+            categories.value.splice(idx, 1)
+        }
+    }
+
+    async function deleteCategory( deleteCategory) {
+        // Note that when an error occours, the exception should be
+        // catch by the function that called the deleteProject
+        const response = await axios.delete('categories/' + deleteCategory.id)
+        deleteCategoryOnArray(response.data.data)
+        //socket.emit('deleteProject', response.data.data)
+        return response.data.data
+    }
+
 
     return {
         categories,
@@ -52,6 +93,9 @@ export const useCategoryStore = defineStore('category', () => {
         clearCategories,
         totalCategories,
         getCategoriesByFilter,
-        getCategoriesByFilterTotal
+        getCategoriesByFilterTotal,
+        deleteCategory,
+        insertCategory,
+        updateCategory
     }
 })
