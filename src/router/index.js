@@ -8,10 +8,18 @@ import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCard from "../components/vcard/VCard.vue"
 import VCards from "../components/vcard/VCards.vue"
+import Admin from "../components/admins/Admin.vue"
+import Admins from "../components/admins/Admins.vue"
+import HomeView from "../views/HomeView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
     {
       path: '/dashboard',
       name: 'Dashboard',
@@ -81,9 +89,16 @@ const router = createRouter({
 
     //Admin  
     {
-      path: '/adminDetails',
-      name: 'AdminDetails',
-      component: () => import('../components/admins/AdminDetail.vue')
+      path: '/admins/:id',
+      name: 'Admin',
+      component: Admin,
+      props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: "/admins",
+      name: 'Admins',
+      component: Admins,
+      props: route => ({ id: parseInt(route.params.id )})
     },
 
     //Others
