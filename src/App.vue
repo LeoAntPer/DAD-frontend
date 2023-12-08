@@ -107,19 +107,19 @@ onMounted(() => {
                 Dashboard
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="userStore.userType == 'A'">
               <router-link class="nav-link" :class="{ active: $route.name == 'Admins' }" :to="{ name: 'Admins' }" @click="clickMenuOption">
                 <i class="bi bi-person"></i>
                 Admins
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="userStore.userType == 'A'">
               <router-link class="nav-link" :class="{ active: $route.name == 'VCards' }" :to="{ name: 'VCards' }">
                 <i class="bi bi-credit-card"></i>
                 VCards
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="userStore.userId != -1 && userStore.userType == 'V'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Transactions' }"
                 :to="{ name: 'Transactions' }">
                 <i class="bi bi-wallet2"></i>

@@ -19,7 +19,7 @@ const props = defineProps({
 const emit = defineEmits(["save", "cancel"]);
 
 const editingUser = ref(props.admin)
-console.log(editingUser.value)
+
 watch(
     () => props.admin,
     (newUser) => {

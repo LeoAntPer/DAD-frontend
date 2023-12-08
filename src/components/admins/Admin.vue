@@ -50,7 +50,7 @@ const save = async (userToSave) => {
   errors.value = null
   if (inserting(props.id)) {
     try {
-      const response = await axios.post('users', userToSave)
+      const response = await axios.post('/users', userToSave)
       admin.value = response.data.data
       originalValueStr = JSON.stringify(admin.value)
       toast.success('User #' + admin.value.id + ' was registered successfully.')

@@ -6,8 +6,8 @@ import Transaction from "../components/transactions/Transaction.vue"
 import Transactions from "../components/transactions/Transactions.vue"
 import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
-import VCard from "../components/vcard/VCard.vue"
-import VCards from "../components/vcard/VCards.vue"
+import VCard from "../components/vcards/VCard.vue"
+import VCards from "../components/vcards/VCards.vue"
 import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
@@ -76,10 +76,10 @@ const router = createRouter({
 
     //VCards
     {
-      path: '/vcards/:id',
+      path: '/vcards/:phone_number',
       name: 'VCard',
       component: VCard,
-      props: route => ({ id: parseInt(route.params.id) })
+      props: route => ({ phone_number: parseInt(route.params.phone_number) })
     },
     {
       path: '/vcards',

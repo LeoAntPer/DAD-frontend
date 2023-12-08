@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
 
     const userId = computed(() => user.value?.id ?? -1)
 
-    const userType = computed(() => user.value?.type ?? 'V')
+    const userType = computed(() => user.value?.user_type ?? 'V')
 
     async function loadUser() {
         try {
