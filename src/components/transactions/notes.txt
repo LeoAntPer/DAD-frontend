@@ -1,0 +1,31 @@
+- Only debit transactions for the owner in our app
+
+- Transaction:
+    - Value (>0, <= balance, <= max_debit)
+    - Type of payment (VCard, MBWAY, ...)
+    - Payment reference (VCard number, Paypal email, ...)
+
+- VCard to VCard transaction
+    - 2 transactions created (debit from source, credit to destination)
+    - This type of payment is handled exclusively on our app
+
+- Other types of payments (Payment Gateway Service)
+    - Transaction is valid after a valid response from API
+    - Validation rules for chosen payment type
+
+- After transaction
+    - Update VCard balance
+    - Update date and datime of transaction
+
+- Transaction history
+    - List of all transactions associated to VCard
+    - Access transaction details
+    - Sorted by datetime, last transaction on top of the List
+    - Number of transactions is huge => pagination, filters, etc
+
+- Transaction details
+    - Debit transactions
+        - Optional description and category => specified when creating transaction or editing
+    - Credit transactions
+        - description and category can only be specified after transaction is created (duh)
+    
