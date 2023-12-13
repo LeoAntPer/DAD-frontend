@@ -126,11 +126,18 @@ onMounted(() => {
                 Transferências
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="userStore.userId != -1 && userStore.userType == 'V'">
               <router-link class="nav-link" :class="{ active: $route.name === 'Categories' }"
                 :to="{ name: 'Categories' }">
                 <i class="bi bi-list-task"></i>
                 Categories
+              </router-link>
+            </li>
+            <li class="nav-item" v-if="userStore.userType == 'A'">
+              <router-link class="nav-link" :class="{ active: $route.name === 'DefaultCategories' }"
+                :to="{ name: 'Categories' }">
+                <i class="bi bi-list-task"></i>
+                Default Categories
               </router-link>
             </li>
             <li class="nav-item">
