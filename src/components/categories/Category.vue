@@ -77,6 +77,8 @@ const save = async () => {
   errors.value = null
   if (operation.value == 'insert') {
     try {
+      category.value = await categoryStore.insertCategory(category.value)
+      originalValueStr = JSON.stringify(category.value)
       toast.success('Category #' + category.value.id + ' was created successfully.')
       router.back()
     } catch (error) {
@@ -89,12 +91,10 @@ const save = async () => {
     }
   } else {
     try {
-      if(userStore.userType == 'A')
-          category.value = await categoryStore.updateCategory(category.value)
-          originalValueStr = JSON.stringify(category.value)
-          toast.success('Category #' + category.value.id + ' was updated successfully.')
-          router.back()
-      
+        category.value = await categoryStore.updateCategory(category.value)
+        originalValueStr = JSON.stringify(category.value)
+        toast.success('Category #' + category.value.id + ' was updated successfully.')
+        router.back()
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
