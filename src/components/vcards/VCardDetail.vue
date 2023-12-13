@@ -57,6 +57,9 @@ const userTitle = computed(() => {
 })
 
 const save = () => {
+  if(editingUser.value.max_debit == null) {
+    editingUser.value.max_debit = 5000
+  }
   const userToSave = editingUser.value
   userToSave.deletePhotoOnTheServer = deletePhotoOnTheServer.value
   userToSave.base64ImagePhoto = editingImageAsBase64.value
@@ -120,6 +123,19 @@ const cleanPhoto = () => {
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
         <div class="mb-3">
+          <label for="inputPhoneNumber" class="form-label">Phone Number</label>
+          <input
+            type="text"
+            class="form-control"
+            :class="{ 'is-invalid': errors ? errors['phone_number'] : false }"
+            id="inputPhoneNumber"
+            placeholder="000000000"
+            required
+            v-model="editingUser.phone_number"
+          />
+          <field-error-message :errors="errors" fieldName="name"></field-error-message>
+        </div>
+        <div class="mb-3">
           <label for="inputName" class="form-label">Name</label>
           <input
             type="text"
@@ -147,7 +163,7 @@ const cleanPhoto = () => {
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
 
-        <div>
+        <div class="mb-3 px-1" v-if="!inserting">
           <label for="inputMaxDebit" class="form-label">Max Debit</label>
           <input
             type="number"
@@ -160,6 +176,30 @@ const cleanPhoto = () => {
             v-model="editingUser.max_debit"
           />
           <field-error-message :errors="errors" fieldName="max_debit"></field-error-message>
+        </div>
+
+        <div class="mb-3" v-if="inserting">
+          <label for="inputPassword" class="form-label">Password</label>
+          <input
+              type="password"
+              class="form-control"
+              :class="{ 'is-invalid': errors ? errors['password'] : false }"
+              id="inputPassword"
+              v-model="editingUser.password"
+          />
+          <field-error-message :errors="errors" fieldName="password"></field-error-message>
+        </div>
+
+        <div class="mb-3" v-if="inserting">
+          <label for="inputCode" class="form-label">Confirmation Code</label>
+          <input
+              type="number"
+              class="form-control"
+              :class="{ 'is-invalid': errors ? errors['confirmation_code'] : false }"
+              id="inputCode"
+              v-model="editingUser.confirmation_code"
+          />
+          <field-error-message :errors="errors" fieldName="confirmation_code"></field-error-message>
         </div>
       </div>
       <div class="w-25">
@@ -208,7 +248,7 @@ const cleanPhoto = () => {
     @change="changePhotoFile"
   />
 
-  <form class="row g-3 needs-validation" novalidate @submit.prevent="updateCode">
+  <form v-if="userStore.user" class="row g-3 needs-validation" novalidate @submit.prevent="updateCode">
     <h3 class="mt-5 mb-3">Change Confirmation Code</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
@@ -218,11 +258,11 @@ const cleanPhoto = () => {
           <input
             type="number"
             class="form-control"
-            :class="{ 'is-invalid': errors ? errors['code'] : false }"
+            :class="{ 'is-invalid': errors ? errors['confirmation_code'] : false }"
             id="inputCode"
-            v-model="editingUser.code"
+            v-model="editingUser.confirmation_code"
           />
-          <field-error-message :errors="errors" fieldName="code"></field-error-message>
+          <field-error-message :errors="errors" fieldName="confirmation_code"></field-error-message>
         </div>
 
         <div class="mb-3">
@@ -243,11 +283,11 @@ const cleanPhoto = () => {
     </div>
     <hr />
     <div class="mt-2 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5 mx-2" @click="save">Save</button>
+      <button type="button" class="btn btn-primary px-5 mx-2" @click="updateCode">Save</button>
     </div>
   </form>
 
-  <form class="row g-3 needs-validation" novalidate @submit.prevent="updatePassword">
+  <form v-if="userStore.user" class="row g-3 needs-validation" novalidate @submit.prevent="updatePassword">
     <h3 class="mt-5 mb-3">Change Password</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
@@ -282,7 +322,7 @@ const cleanPhoto = () => {
     </div>
     <hr />
     <div class="mt-2 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5 mx-2" @click="save">Save</button>
+      <button type="button" class="btn btn-primary px-5 mx-2" @click="updatePassword">Save</button>
     </div>
   </form>
 </template>

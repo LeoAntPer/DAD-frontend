@@ -19,11 +19,14 @@ const newVCard = () => {
     phone_number: null,
     name: '',
     email: '',
-    max_debit: null,
-    confirmation_code: '',
-    confirmation_code_confirmation: '',
+    photo_url: null,
     password: '',
-    password_confirmation: ''
+    confirmation_code: '',
+    blocked: 0,
+    balance: 0,
+    max_debit: null,
+    custom_options: null,
+    custom_data: null
   }
 }
 
@@ -74,7 +77,7 @@ const save = async (userToSave) => {
     }
   } else {
     try {
-      const response = await axios.put('users/' + props.phone_number, userToSave)
+      const response = await axios.put('vcards/' + props.phone_number, userToSave)
       vcard.value = response.data.data
       originalValueStr = JSON.stringify(vcard.value)
       toast.success('VCard #' + vcard.value.phone_number + ' was updated successfully.')

@@ -82,6 +82,12 @@ const router = createRouter({
       props: route => ({ phone_number: parseInt(route.params.phone_number) })
     },
     {
+      path:'/vcards/new',
+      name:'NewVCard',
+      component: VCard,
+      props: {phone_number: -1}
+    },
+    {
       path: '/vcards',
       name: 'VCards',
       component: VCards,
@@ -93,6 +99,12 @@ const router = createRouter({
       name: 'Admin',
       component: Admin,
       props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/admins/new',
+      name: 'NewAdmin',
+      component: Admin,
+      props: {id: -1}
     },
     {
       path: "/admins",
