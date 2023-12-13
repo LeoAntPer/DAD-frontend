@@ -20,8 +20,16 @@ const axios = inject('axios')
 const newTransaction = () => {
   return {
     id: null,
-    description: '',
-    category_id: null
+    vcard: userStore.userId,
+    value: null,
+    type: null,
+    payment_type: null,
+    payment_reference: null,
+    pair_vcard: null,
+    description: null,
+    category_id: null,
+    custom_options: null,
+    custom_data: null
   }
 }
 

@@ -16,6 +16,9 @@ export const useTransactionStore = defineStore('transaction', () => {
 
     async function loadTransactions() {
         try {
+            if (!userStore.user) {
+                await userStore.restoreToken()
+            }
             const response = await axios.get(`vcards/${userStore.userId}/transactions`)
             transactions.value = response.data.data
             return transactions.value
@@ -30,15 +33,17 @@ export const useTransactionStore = defineStore('transaction', () => {
         transactions.value = []
     }
 
-    function getTransactionsByFilter(type) {
+    function getTransactionsByFilter(type, category) {
         return transactions.value.filter( transaction => 
-            (!type || transaction.type == type)
+            (!type || transaction.type == type) &&
+            (category == -1 || transaction.category_id == category)
         )
     }
 
-    function getTransactionsByFilterTotal(type) {
+    function getTransactionsByFilterTotal(type, category) {
         return transactions.value.filter( transaction => 
-            (!type || transaction.type == type)
+            (!type || transaction.type == type) &&
+            (category == -1 || transaction.category_id == category)
         ).length
     }
 
