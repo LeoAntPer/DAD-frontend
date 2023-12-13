@@ -27,6 +27,10 @@ const totalTransactions = computed(() =>
   transactionStore.getTransactionsByFilterTotal(filterByType.value)
 )
 
+const editCategory = (transaction) => {
+  router.push({ name: 'Transaction', params: { id: transaction.id } })
+}
+
 
 onMounted(() => {
     loadTransactions()
@@ -54,7 +58,7 @@ onMounted(() => {
       </select>
     </div>
   </div>
-  <h5 v-if="totalCategories == 0">You have no transactions</h5>
+  <h5 v-if="totalTransactions == 0">You have no transactions</h5>
   <transaction-table v-else
    :transactions="filteredTransactions"
    @edit="editCategory"

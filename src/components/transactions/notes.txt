@@ -18,8 +18,8 @@
     - Update date and datime of transaction
 
 - Transaction history
-    - List of all transactions associated to VCard
-    - Access transaction details
+    - List of all transactions associated to VCard ####
+    - Access transaction details 
     - Sorted by datetime, last transaction on top of the List
     - Number of transactions is huge => pagination, filters, etc
 

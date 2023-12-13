@@ -43,6 +43,24 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
 
 
+    function updateTransactionOnArray(transaction) {
+        let idx = transactions.value.findIndex((t) => t.id === transaction.id)
+        if (idx >= 0) {
+            transactions.value[idx] = transaction
+        }
+    }
+
+    async function updateTransaction(updateTransaction) {
+        // Note that when an error occours, the exception should be
+        // catch by the function that called the updateProject
+        const response = await axios.put('transactions/' + updateTransaction.id, updateTransaction)
+        updateTransactionOnArray(response.data.data)
+        //socket.emit('updateProject', response.data.data)
+        return response.data.data
+    }
+
+
+
     return {
         transactions,
         totalTransactions,
@@ -50,5 +68,6 @@ export const useTransactionStore = defineStore('transaction', () => {
         clearTransactions,
         getTransactionsByFilter,
         getTransactionsByFilterTotal,
+        updateTransaction,
     }
 })
