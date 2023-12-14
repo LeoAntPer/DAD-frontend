@@ -11,6 +11,7 @@ import VCards from "../components/vcards/VCards.vue"
 import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
+import Statistics from "../components/statistics/Statistics.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,7 +106,7 @@ const router = createRouter({
     {
       path: '/statistics',
       name: 'Statistics',
-      component: Categories,
+      component: Statistics,
     },
   ]
 })
