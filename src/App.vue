@@ -140,7 +140,7 @@ onMounted(() => {
                 Default Categories
               </router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="userStore.userId != -1">
               <router-link class="nav-link" :class="{ active: $route.name === 'Statistics' }"
                 :to="{ name: 'Statistics' }">
                 <i class="bi bi-graph-up"></i>
