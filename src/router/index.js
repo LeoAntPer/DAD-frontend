@@ -119,6 +119,24 @@ router.beforeEach(async (to, from, next) => {
     handlingFirstRoute = false
     await userStore.restoreToken()
   }
+
+  if ((to.name == 'Login') || (to.name == 'home')/* || (to.name == 'NewUser')*/) {
+    next()
+    return
+  }
+  if (!userStore.user) {
+    next({ name: 'Login' })
+    return
+  }
+  
+  // Transactions authorization
+  if (['Transactions', 'Transaction', 'NewTransaction'].includes(to.name)) {
+    if (userStore.userType != 'V') {
+      next({ name: 'home' })
+      return
+    }
+  }
+
   next()
 })
 
