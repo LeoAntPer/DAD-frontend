@@ -21,9 +21,9 @@ const axios = inject('axios')
 const newTransaction = () => {
   return {
     id: null,
-    vcard: userStore.userId,
+    vcard: userStore.userType == 'A' ? null : userStore.userId,
     value: null,
-    type: null,
+    type: userStore.userType == 'A' ? 'C' : 'D',
     payment_type: null,
     payment_reference: null,
     pair_vcard: null,

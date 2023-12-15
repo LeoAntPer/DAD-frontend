@@ -1,5 +1,8 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { useUserStore } from '../../stores/user'
+
+const userStore = useUserStore()
 
 const props = defineProps({
     transaction: {
@@ -54,6 +57,14 @@ const isInsertOperation = ref(props.operationType == 'insert')
     <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
         <h3 class="mt-5 mb-3">{{ transactionTitle }}</h3>
         <hr>
+
+        <!--VCARD-->
+        <div class="mb-3" v-if="userStore.userType == 'A'">
+            <label for="inputVCard" class="form-label">VCard</label>
+            <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['vcard'] : false }"
+                id="inputVCard" placeholder="Phone number" v-model="editingTransaction.vcard" :disabled="!isInsertOperation">
+            <field-error-message :errors="errors" fieldName="vcard"></field-error-message>
+        </div>
 
         <!--VALUE-->
         <div class="mb-3">

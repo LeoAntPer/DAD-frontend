@@ -131,7 +131,7 @@ router.beforeEach(async (to, from, next) => {
   }
   
   // Transactions authorization
-  if (['Transactions', 'Transaction', 'NewTransaction'].includes(to.name)) {
+  if (['Transactions', 'Transaction'].includes(to.name)) {
     if (userStore.userType != 'V') {
       next({ name: 'home' })
       return
