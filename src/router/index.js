@@ -1,3 +1,4 @@
+import { useUserStore } from '../stores/user'
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../components/Dashboard.vue'
 import Login from "../components/auth/Login.vue"
@@ -12,6 +13,8 @@ import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
 import Statistics from "../components/statistics/Statistics.vue"
+
+let handlingFirstRoute = true
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -109,6 +112,33 @@ const router = createRouter({
       component: Statistics,
     },
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+  if (handlingFirstRoute) {
+    handlingFirstRoute = false
+    await userStore.restoreToken()
+  }
+
+  if ((to.name == 'Login') || (to.name == 'home')/* || (to.name == 'NewUser')*/) {
+    next()
+    return
+  }
+  if (!userStore.user) {
+    next({ name: 'Login' })
+    return
+  }
+  
+  // Transactions authorization
+  if (['Transactions', 'Transaction', 'NewTransaction'].includes(to.name)) {
+    if (userStore.userType != 'V') {
+      next({ name: 'home' })
+      return
+    }
+  }
+
+  next()
 })
 
 export default router

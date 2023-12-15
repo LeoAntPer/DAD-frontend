@@ -123,7 +123,7 @@ onMounted(() => {
               <router-link class="nav-link" :class="{ active: $route.name === 'Transactions' }"
                 :to="{ name: 'Transactions' }">
                 <i class="bi bi-wallet2"></i>
-                Transferências
+                Transactions
               </router-link>
             </li>
             <li class="nav-item" v-if="userStore.userId != -1 && userStore.userType == 'V'">
