@@ -43,7 +43,8 @@ const categories = ref([])
 
 const loadCategories = async () => {
   try {
-    categories.value = await categoryStore.getCategoriesByFilter()
+    await categoryStore.loadCategories()
+    categories.value = categoryStore.getCategoriesByFilter()
   } catch (error) {
     console.log(error)
   }
@@ -90,7 +91,7 @@ onMounted(() => {
       </button>
     </div>
   </div>
-  <h5 v-if="totalTransactions == 0">You have no transactions {{ (filterByType || filterByCategory) ? 'with this filter' : ''}}</h5>
+  <h5 v-if="totalTransactions == 0">You have no transactions {{ (filterByType || (filterByCategory != -1)) ? 'with this filter' : ''}}</h5>
   <transaction-table v-else
    :transactions="filteredTransactions"
    @edit="editTransaction"

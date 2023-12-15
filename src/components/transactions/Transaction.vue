@@ -17,6 +17,7 @@ const router = useRouter()
 const toast = useToast()
 const axios = inject('axios')
 
+
 const newTransaction = () => {
   return {
     id: null,
@@ -58,6 +59,22 @@ const loadTransaction = async (id) => {
 
 const save = async () => {
   errors.value = null
+  if (operation.value == 'insert') {
+    try {
+        transaction.value = await transactionStore.insertTransaction(transaction.value)
+        originalValueStr = JSON.stringify(transaction.value)
+        toast.success('Transaction #' + transaction.value.id + ' was created successfully.')
+        router.back()
+    } catch (error) {
+        console.log(error)
+        if (error.response.status == 422) {
+        errors.value = error.response.data.errors
+        toast.error('Transaction was not created due to validation errors!')
+        } else {
+        toast.error('Transaction was not created due to unknown server error!')
+        }
+    }
+  } else {
     try {
         transaction.value = await transactionStore.updateTransaction(transaction.value)
         originalValueStr = JSON.stringify(transaction.value)
@@ -72,6 +89,7 @@ const save = async () => {
         toast.error('Transaction #' + props.id + ' was not updated due to unknown server error!')
         }
     }
+  }
 }  
 
 const cancel = () => {

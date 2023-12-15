@@ -16,9 +16,6 @@ export const useTransactionStore = defineStore('transaction', () => {
 
     async function loadTransactions() {
         try {
-            if (!userStore.user) {
-                await userStore.restoreToken()
-            }
             const response = await axios.get(`vcards/${userStore.userId}/transactions`)
             transactions.value = response.data.data
             return transactions.value
@@ -45,6 +42,19 @@ export const useTransactionStore = defineStore('transaction', () => {
             (!type || transaction.type == type) &&
             (category == -1 || transaction.category_id == category)
         ).length
+    }
+
+    async function insertTransaction(newTransaction) {
+        // set transaction type
+        newTransaction.type = userStore.userType == 'V' ? 'D' : 'C'
+        // if transaction is to a vcard, pair_vcard must be set
+        if (newTransaction.payment_type == 'VCARD') {
+            newTransaction.pair_vcard = newTransaction.payment_reference
+        }
+        const response = await axios.post('transactions', newTransaction)
+        transactions.value.push(response.data.data)
+        //socket.emit('newProject', response.data.data)
+        return response.data.data
     }
 
 
@@ -74,5 +84,6 @@ export const useTransactionStore = defineStore('transaction', () => {
         getTransactionsByFilter,
         getTransactionsByFilterTotal,
         updateTransaction,
+        insertTransaction,
     }
 })

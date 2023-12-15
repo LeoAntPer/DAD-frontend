@@ -1,3 +1,4 @@
+import { useUserStore } from '../stores/user'
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../components/Dashboard.vue'
 import Login from "../components/auth/Login.vue"
@@ -11,6 +12,8 @@ import VCards from "../components/vcards/VCards.vue"
 import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
+
+let handlingFirstRoute = true
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -108,6 +111,15 @@ const router = createRouter({
       component: Categories,
     },
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+  if (handlingFirstRoute) {
+    handlingFirstRoute = false
+    await userStore.restoreToken()
+  }
+  next()
 })
 
 export default router
