@@ -116,7 +116,7 @@ const cleanPhoto = () => {
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
-        <div class="mb-3">
+        <div class="mb-3" v-if="inserting">
           <label for="inputPhoneNumber" class="form-label">Phone Number</label>
           <input
             type="text"
@@ -135,6 +135,7 @@ const cleanPhoto = () => {
             type="text"
             class="form-control"
             :class="{ 'is-invalid': errors ? errors['name'] : false }"
+            :disabled="userStore.userType != 'V'"
             id="inputName"
             placeholder="User Name"
             required
@@ -149,6 +150,7 @@ const cleanPhoto = () => {
             type="email"
             class="form-control"
             :class="{ 'is-invalid': errors ? errors['email'] : false }"
+            :disabled="userStore.userType != 'V'"
             id="inputEmail"
             placeholder="Email"
             required

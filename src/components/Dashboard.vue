@@ -84,9 +84,11 @@ const newTransaction = () => {
       </div>
     </div>
   </div>
-  <button v-if="userStore.userType == 'A'" type="button" class="btn btn-success px-4 btn-addprj" @click="newTransaction">
-        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Register
-        Transaction
-      </button>
+  <div class="d-flex justify-content-center align-items-center vh-100">
+    <button v-if="userStore.userType == 'A'" type="button" class="btn btn-success px-4 btn-addprj" @click="newTransaction">
+      <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Register
+      Transaction
+    </button>
+  </div>
 </template>
   

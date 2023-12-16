@@ -74,9 +74,9 @@ const save = async (userToSave) => {
       admin.value = response.data.data
       originalValueStr = JSON.stringify(admin.value)
       toast.success('User #' + admin.value.id + ' was updated successfully.')
-      /*if (user.value.id == userStore.userId) {
+      if (admin.value.id == userStore.userId) {
               await userStore.loadUser()
-            }*/
+            }
 
       //socket.emit('updatedUser', user.value)
 
