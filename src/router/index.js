@@ -1,8 +1,10 @@
 import { useUserStore } from '../stores/user'
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from "../stores/user.js"
 import Dashboard from '../components/Dashboard.vue'
 import Login from "../components/auth/Login.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
+import ChangeConfirmationCode from "../components/auth/ChangeConfirmationCode.vue"
 import Transaction from "../components/transactions/Transaction.vue"
 import Transactions from "../components/transactions/Transactions.vue"
 import Category from "../components/categories/Category.vue"
@@ -16,6 +18,8 @@ import Statistics from "../components/statistics/Statistics.vue"
 
 let handlingFirstRoute = true
 
+
+let handlingFirstRoute = true
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -38,6 +42,11 @@ const router = createRouter({
       path: '/password',
       name: 'ChangePassword',
       component: ChangePassword
+    },
+    {
+      path: '/confirmation-code',
+      name: 'ChangeConfirmationCode',
+      component: ChangeConfirmationCode
     },
 
     //Transaction
@@ -86,6 +95,12 @@ const router = createRouter({
       props: route => ({ phone_number: parseInt(route.params.phone_number) })
     },
     {
+      path:'/vcards/new',
+      name:'NewVCard',
+      component: VCard,
+      props: {phone_number: -1}
+    },
+    {
       path: '/vcards',
       name: 'VCards',
       component: VCards,
@@ -97,6 +112,12 @@ const router = createRouter({
       name: 'Admin',
       component: Admin,
       props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/admins/new',
+      name: 'NewAdmin',
+      component: Admin,
+      props: {id: -1}
     },
     {
       path: "/admins",
@@ -121,23 +142,61 @@ router.beforeEach(async (to, from, next) => {
     await userStore.restoreToken()
   }
 
-  if ((to.name == 'Login') || (to.name == 'home')/* || (to.name == 'NewUser')*/) {
-    next()
-    return
-  }
+  if ((to.name == 'Login') || (to.name == 'Dashboard') || (to.name == 'NewVCard')) {
+
   if (!userStore.user) {
     next({ name: 'Login' })
+    return
+  }
+
+  if (to.name == 'Admins') {
+    if (userStore.userType != 'A') {
+      next({ name: 'Dashboard' })
+      return
+    }
+  }
+  if (to.name == 'Admin') {
+    if (userStore.userType != 'A') {
+      next({ name: 'Dashboard' })
+      return
+    }
+  }
+  if (to.name == 'NewAdmin') {
+    if (userStore.userType != 'A') {
+      next({ name: 'Dashboard' })
+      return
+    }
+  }
+  if (to.name == 'VCards') {
+    if (userStore.userType != 'A') {
+        next({ name: 'Dashboard' })
+        return
+    }
+  }
+  if (to.name == 'VCard') {
+    if ((userStore.userType == 'A') || (userStore.userId == to.params.phone_number)) {
+      next()
+      return
+    }
+    next({ name: 'Dashboard' })
+    return
+  }
+  if(to.name == 'NewVCard') {
+    if(!userStore.user) {
+      next()
+      return
+    }
+    next({ name: 'Dashboard' })
     return
   }
   
   // Transactions authorization
   if (['Transactions', 'Transaction'].includes(to.name)) {
     if (userStore.userType != 'V') {
-      next({ name: 'home' })
+      next({ name: 'Dashboard' })
       return
     }
   }
-
   next()
 })
 

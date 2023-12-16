@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject, computed } from 'vue'
 import AdminTable from './AdminTable.vue'
 
 const axios = inject('axios')
@@ -21,9 +21,17 @@ const loadUsers = async () => {
   }
 }
 
+const createAdmin = () => {
+  router.push({ name: 'NewAdmin'})
+}
+
 const editUser = (admin) => {
   router.push({ name: 'Admin', params: { id: admin.id } })
 }
+
+const totalAdmins = computed( () => {
+  return admins.value.length
+})
 
 onMounted(() => {
   loadUsers()
@@ -31,8 +39,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <h3 class="mt-5 mb-3">Admins</h3>
-  <hr />
+  <div class="d-flex justify-content-between">
+    <div class="mx-2">
+      <h3 class="mt-4">Admins</h3>
+    </div>
+    <div class="mx-2 total-filtro">
+      <h5 class="mt-4">Total: {{ totalAdmins }}</h5>
+    </div>
+  </div>
+  <hr>
+  
+    <div class="mx-2 mt-2">
+      <button
+        type="button"
+        class="btn btn-success px-4 btn-addtask"
+        @click="createAdmin"
+      ><i class="bi bi-xs bi-plus-circle"></i>&nbsp; Create New Admin</button>
+    </div>
+  
   <admin-table :admins="admins" :showId="false" @edit="editUser"></admin-table>
 </template>
 

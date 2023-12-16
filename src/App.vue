@@ -1,17 +1,32 @@
 <script setup>
 import { useRouter, RouterLink, RouterView } from 'vue-router'
 import { useUserStore } from './stores/user';
-import { onMounted } from 'vue'
+import { onMounted, computed, inject, ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 //import LaravelTester from './components/LaravelTester.vue';
 //import WebSocketTester from './components/WebSocketTester.vue';
 
 
 const router = useRouter()
-
+const axios = inject("axios")
 const toast = useToast()
-
 const userStore = useUserStore()
+
+const getProfileLink = computed(() => {
+  if (userStore.userType === 'V') {
+        return {
+          name: 'VCard',
+          params: { phone_number: userStore.userId },
+        };
+      } else if (userStore.userType === 'A') {
+        return { 
+          name: 'Admin',
+          params: {id: userStore.userId } }; // Adjust 'Admin' to the actual route name for admins
+      } else {
+        // Handle other user types or provide a default link
+        return { name: 'DefaultRoute' };
+      }
+})
 
 const clickMenuOption = () => {
   const domReference = document.getElementById('buttonSidebarExpandId')
@@ -31,6 +46,21 @@ const logout = async () => {
   } else {
     toast.error('There was a problem logging out of the application!')
   }
+}
+
+const deleteUser= async () => {
+  const user = ref(null)
+  if(userStore.userType == 'V') {
+     const response = await axios.delete("/vcards/" + userStore.userId)
+     user.value = response.data.data
+  }
+  else {
+    const response = await axios.delete("/users/" + userStore.userId)
+    user.value = response.data.data
+  }
+  toast.success('User #' + user.value.phone_number + ' was deleted successfully.')
+
+  logout()
 }
 
 onMounted(() => {
@@ -55,9 +85,10 @@ onMounted(() => {
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item" v-show="!userStore.user">
-            <a class="nav-link" href="#"><i class="bi bi-person-check-fill"></i>
+            <router-link class="nav-link" :class="{ active: $route.name === 'NewVCard' }" :to="{ name: 'NewVCard' }" @click="clickMenuOption">
+              <i class="bi bi-person-check-fill"></i>
               Register
-            </a>
+            </router-link>
           </li>
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
@@ -74,7 +105,11 @@ onMounted(() => {
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               <li>
-                <a class="dropdown-item" href="#"><i class="bi bi-person-square"></i>Profile</a>
+                <router-link class="dropdown-item" :class="{ active: $route.name === (userStore.userType === 'V' ? 'VCard' : 'Admin') }"
+                :to="getProfileLink" @click="clickMenuOption">
+                  <i class="bi bi-person-square"></i>
+                  Profile
+                </router-link>
               </li>
               <li>
                 <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
@@ -83,11 +118,21 @@ onMounted(() => {
                   Change password
                 </router-link>
               </li>
+              <li v-if="userStore.userType === 'V'">
+                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeConfirmationCode' }"
+                  :to="{ name: 'ChangeConfirmationCode' }" @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change confirmation code
+                </router-link>
+              </li>
               <li>
                 <hr class="dropdown-divider">
               </li>
               <li>
                 <a class="dropdown-item" @click.prevent="logout"><i class="bi bi-arrow-right"></i>Logout</a>
+              </li>
+              <li>
+                <a class="dropdown-item" @click.prevent="deleteUser"><i class="bi bi-x"></i>Delete VCard</a>
               </li>
             </ul>
           </li>

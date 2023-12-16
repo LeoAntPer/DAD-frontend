@@ -32,7 +32,7 @@ const userTitle = computed(() => {
     if (!editingUser.value) {
         return ''
     }
-    return props.inserting ? 'Register a new user' : 'Admin #' + editingUser.value.id
+    return props.inserting ? 'Create a new Admin' : 'Admin #' + editingUser.value.id
 })
 
 const save = () => {
@@ -71,13 +71,6 @@ const cancel = () => {
                         :class="{ 'is-invalid': errors ? errors['password'] : false }" id="inputPassword"
                         v-model="editingUser.password" />
                     <field-error-message :errors="errors" fieldName="password"></field-error-message>
-                </div>
-                <div class="mb-3" v-if="inserting">
-                    <label for="inputPasswordConfirmation" class="form-label">Password Confirmation</label>
-                    <input type="password" class="form-control"
-                        :class="{ 'is-invalid': errors ? errors['password_confirmation'] : false }"
-                        id="inputPasswordConfirmation" v-model="editingUser.password_confirmation" />
-                    <field-error-message :errors="errors" fieldName="password_confirmation"></field-error-message>
                 </div>
             </div>
         </div>

@@ -1,4 +1,8 @@
 <script setup>
+import { useUserStore } from '../../stores/user';
+
+const userStore = useUserStore()
+
 const props = defineProps({
   admins: {
     type: Array,
@@ -23,6 +27,13 @@ const emit = defineEmits(["edit"])
 const editClick = (user) => {
   emit("edit", user)  
 }
+
+const canViewUserDetail = () => {
+    if(!userStore.user || userStore.userType == 'V'){
+        return false
+    }
+    return userStore.userType == 'A'
+}
 </script>
 
 <template>
@@ -39,7 +50,7 @@ const editClick = (user) => {
           <td v-if="showId" class="align-middle">{{ admin.id }}</td>
           <td class="align-middle">{{ admin.name }}</td>
           <td v-if="showEmail" class="align-middle">{{ admin.email }}</td>          <td class="text-end align-middle" v-if="showEditButton">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end" v-if="canViewUserDetail()">
               <button
                 class="btn btn-xs btn-light"
                 @click="editClick(admin)"
