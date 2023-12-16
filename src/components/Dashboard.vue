@@ -18,7 +18,6 @@ const loadUser = async (id) => {
     try{
     const response = await axios.get('/vcards/' + id)
     user.value = response.data.data
-    console.log(user.value)
     }catch(error) {
       console.log(error)
     }

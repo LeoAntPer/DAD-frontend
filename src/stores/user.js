@@ -37,6 +37,7 @@ export const useUserStore = defineStore('user', () => {
 
     async function login(credentials) {
         try {
+            console.log(credentials)
             const response = await axios.post('auth/login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
@@ -58,6 +59,44 @@ export const useUserStore = defineStore('user', () => {
             return true
         } catch (error) {
             return false
+        }
+    }
+
+    async function changePassword(credentials) {
+        if (userId.value < 0) {
+          throw "Anonymous users cannot change the password!";
+        }
+        try {
+            if(userType.value == 'A') {
+                console.log("Admin Credentials")
+                console.log(credentials)
+                await axios.patch(`users/${user.value.id}/password`, credentials);
+                return true;
+            }
+            if(userType.value == 'V') {
+                console.log("VCard Credentials")
+                console.log(credentials)
+                await axios.patch(`vcards/${user.value.id}/password`, credentials)
+                return true;
+            }
+        } catch (error) {
+          throw error;
+        }
+      }
+
+    async function changeConfirmationCode(credentials) {
+        if(userId.value < 0) {
+            throw "Anonymous users cannot change the confirmation code!";
+        }
+        try {
+            if(userType.value == 'V') {
+                console.log("VCard Code Credentials")
+                console.log(credentials)
+                await axios.patch(`vcards/${user.value.id}/confirmationCode`, credentials)
+                return true;
+            }
+        } catch(error) {
+            throw error;
         }
     }
 
@@ -83,6 +122,8 @@ export const useUserStore = defineStore('user', () => {
         loadUser,
         clearUser,
         userPhotoUrl,
-        restoreToken
+        restoreToken,
+        changePassword,
+        changeConfirmationCode
     }
 })

@@ -18,7 +18,7 @@ const getProfileLink = computed(() => {
           name: 'VCard',
           params: { phone_number: userStore.userId },
         };
-      } else if (this.userStore.userType === 'A') {
+      } else if (userStore.userType === 'A') {
         return { 
           name: 'Admin',
           params: {id: userStore.userId } }; // Adjust 'Admin' to the actual route name for admins
@@ -58,7 +58,6 @@ const deleteUser= async () => {
     const response = await axios.delete("/users/" + userStore.userId)
     user.value = response.data.data
   }
-  user
   toast.success('User #' + user.value.phone_number + ' was deleted successfully.')
 
   logout()
@@ -117,6 +116,13 @@ onMounted(() => {
                   :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
                   Change password
+                </router-link>
+              </li>
+              <li v-if="userStore.userType === 'V'">
+                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeConfirmationCode' }"
+                  :to="{ name: 'ChangeConfirmationCode' }" @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change confirmation code
                 </router-link>
               </li>
               <li>

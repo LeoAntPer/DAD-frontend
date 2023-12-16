@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from "../stores/user.js"
 import Dashboard from '../components/Dashboard.vue'
 import Login from "../components/auth/Login.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
+import ChangeConfirmationCode from "../components/auth/ChangeConfirmationCode.vue"
 import Transaction from "../components/transactions/Transaction.vue"
 import Transactions from "../components/transactions/Transactions.vue"
 import Category from "../components/categories/Category.vue"
@@ -12,6 +14,8 @@ import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
 
+
+let handlingFirstRoute = true
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -34,6 +38,11 @@ const router = createRouter({
       path: '/password',
       name: 'ChangePassword',
       component: ChangePassword
+    },
+    {
+      path: '/confirmation-code',
+      name: 'ChangeConfirmationCode',
+      component: ChangeConfirmationCode
     },
 
     //Transaction
@@ -120,6 +129,63 @@ const router = createRouter({
       component: Categories,
     },
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+  if (handlingFirstRoute) {
+    handlingFirstRoute = false
+    await userStore.restoreToken()
+  }
+  if ((to.name == 'Login') || (to.name == 'Dashboard') || (to.name == 'NewVCard')) {
+    next()
+    return
+  }
+  if (!userStore.user) {
+    next({ name: 'Login' })
+    return
+  }
+  if (to.name == 'Admins') {
+    if (userStore.userType != 'A') {
+      next({ name: 'Dashboard' })
+      return
+    }
+  }
+  if (to.name == 'Admin') {
+    if (userStore.userType != 'A') {
+      next({ name: 'Dashboard' })
+      return
+    }
+  }
+  if (to.name == 'NewAdmin') {
+    if (userStore.userType != 'A') {
+      next({ name: 'Dashboard' })
+      return
+    }
+  }
+  if (to.name == 'VCards') {
+    if (userStore.userType != 'A') {
+        next({ name: 'Dashboard' })
+        return
+    }
+  }
+  if (to.name == 'VCard') {
+    if ((userStore.userType == 'A') || (userStore.userId == to.params.phone_number)) {
+      next()
+      return
+    }
+    next({ name: 'Dashboard' })
+    return
+  }
+  if(to.name == 'NewVCard') {
+    if(!userStore.user) {
+      next()
+      return
+    }
+    next({ name: 'Dashboard' })
+    return
+  }
+  next()
 })
 
 export default router

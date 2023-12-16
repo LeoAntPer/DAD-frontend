@@ -21,7 +21,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['save', 'updateCode', 'updatePassword','cancel'])
+const emit = defineEmits(['save','cancel'])
 
 const editingUser = ref(props.vcard)
 const inputPhotoFile = ref(null)
@@ -66,16 +66,6 @@ const save = () => {
   emit('save', userToSave)
 }
 
-const updateCode = () => {
-    const newCode = editingUser.value.code
-    emit('updateCode', newCode)
-}
-
-const updatePassword = () => {
-    const newPassword = editingUser.value.password
-    emit('updatePassword', newPassword)
-}
-
 const cancel = () => {
   emit('cancel', editingUser.value)
 }
@@ -84,6 +74,8 @@ const cancel = () => {
 const changePhotoFile = () => {
   try {
     const file = inputPhotoFile.value.files[0]
+    console.log("Photo File")
+    console.log(file)
     if (!file) {
       editingImageAsBase64.value = null
     } else {
@@ -93,6 +85,8 @@ const changePhotoFile = () => {
         () => {
           // convert image file to base64 string
           editingImageAsBase64.value = reader.result
+          console.log("Editing Image")
+          console.log(editingImageAsBase64)
           deletePhotoOnTheServer.value = false
         },
         false
@@ -247,82 +241,4 @@ const cleanPhoto = () => {
     ref="inputPhotoFile"
     @change="changePhotoFile"
   />
-
-  <form v-if="userStore.user" class="row g-3 needs-validation" novalidate @submit.prevent="updateCode">
-    <h3 class="mt-5 mb-3">Change Confirmation Code</h3>
-    <hr />
-    <div class="d-flex flex-wrap justify-content-between">
-      <div class="w-75 pe-4">
-        <div class="mb-3">
-          <label for="inputCode" class="form-label">Code</label>
-          <input
-            type="number"
-            class="form-control"
-            :class="{ 'is-invalid': errors ? errors['confirmation_code'] : false }"
-            id="inputCode"
-            v-model="editingUser.confirmation_code"
-          />
-          <field-error-message :errors="errors" fieldName="confirmation_code"></field-error-message>
-        </div>
-
-        <div class="mb-3">
-          <label for="inputCodeConfirmation" class="form-label">Code Confirmation</label>
-          <input
-            type="number"
-            class="form-control"
-            :class="{ 'is-invalid': errors ? errors['code_confirmation'] : false }"
-            id="inputCodeConfirmation"
-            v-model="editingUser.code_confirmation"
-          />
-          <field-error-message
-            :errors="errors"
-            fieldName="code_confirmation"
-          ></field-error-message>
-        </div>
-      </div>
-    </div>
-    <hr />
-    <div class="mt-2 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5 mx-2" @click="updateCode">Save</button>
-    </div>
-  </form>
-
-  <form v-if="userStore.user" class="row g-3 needs-validation" novalidate @submit.prevent="updatePassword">
-    <h3 class="mt-5 mb-3">Change Password</h3>
-    <hr />
-    <div class="d-flex flex-wrap justify-content-between">
-      <div class="w-75 pe-4">
-        <div class="mb-3">
-          <label for="inputPassword" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            :class="{ 'is-invalid': errors ? errors['password'] : false }"
-            id="inputPassword"
-            v-model="editingUser.password"
-          />
-          <field-error-message :errors="errors" fieldName="password"></field-error-message>
-        </div>
-
-        <div class="mb-3">
-          <label for="inputPasswordConfirmation" class="form-label">Password Confirmation</label>
-          <input
-            type="password"
-            class="form-control"
-            :class="{ 'is-invalid': errors ? errors['password_confirmation'] : false }"
-            id="inputPasswordConfirmation"
-            v-model="editingUser.password_confirmation"
-          />
-          <field-error-message
-            :errors="errors"
-            fieldName="password_confirmation"
-          ></field-error-message>
-        </div>
-      </div>
-    </div>
-    <hr />
-    <div class="mt-2 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5 mx-2" @click="updatePassword">Save</button>
-    </div>
-  </form>
 </template>

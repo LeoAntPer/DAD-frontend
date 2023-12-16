@@ -3,9 +3,10 @@ import { ref, watch, inject } from 'vue'
 import { useUserStore } from '../../stores/user.js'
 import VCardDetail from './VCardDetail.vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
 
 const axios = inject('axios')
-const toast = inject('ToastPlugin')
+const toast = useToast()
 const userStore = useUserStore()
 const router = useRouter()
 const props = defineProps({
@@ -57,13 +58,14 @@ const save = async (userToSave) => {
   errors.value = null
   if (inserting(props.phone_number)) {
     try {
+      console.log(userToSave)
       const response = await axios.post('/vcards', userToSave)
       vcard.value = response.data.data
       originalValueStr = JSON.stringify(vcard.value)
-      toast.success('VCard #' + vcard.value.phone_number + ' was registered successfully.')
+      toast.success('VCard #' + userToSave.phone_number + ' was registered successfully.')
 
       await userStore.login({
-              username: vcard.value.email,
+              username: userToSave.phone_number,
               password: userToSave.password
             })
       router.push({ name: 'Dashboard' })
@@ -97,38 +99,6 @@ const save = async (userToSave) => {
       }
     }
   }
-}
-
-const updateCode = async (newCode) => {
-    errors.value = null
-    if(inserting(props.phone_number)) {
-        try {
-            const response = await axios.put('vcards/' + props.phone_number + '/newCode', newCode)
-            vcard.value = response.data.data
-        } catch (error) {
-            if(error.response.status == 422) {
-                toast.error('VCard was not registered due to validation errors!')
-            } else {
-                toast.error('VCard was not registered due to unknown server error!')
-            }
-        }
-    }
-}
-
-const updatePassword = async (newPassword) => {
-    errors.value = null
-    if(inserting(props.phone_number)) {
-        try {
-            const response = await axios.put('vcards/' + props.phone_number + '/newPassword', newPassword)
-            vcard.value = response.data.data
-        } catch (error) {
-            if(error.response.status == 422) {
-                toast.error('VCard was not registered due to validation errors!')
-            } else {
-                toast.error('VCard was not registered due to unknown server error!')
-            }
-        }
-    }
 }
 
 const cancel = () => {
@@ -178,8 +148,6 @@ onBeforeRouteLeave((to, from, next) => {
     :errors="errors"
     :inserting="inserting(phone_number)"
     @save="save"
-    @updateCode="updateCode"
-    @updatePassword="updatePassword"
     @cancel="cancel"
   ></VCardDetail>
 </template>

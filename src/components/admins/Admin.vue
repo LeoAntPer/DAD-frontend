@@ -1,11 +1,13 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
-
+import { useUserStore } from '../../stores/user';
 import AdminDetail from './AdminDetail.vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useToast } from 'vue-toast-notification';
 
+const userStore = useUserStore()
 const axios = inject('axios')
-const toast = inject('ToastPlugin')
+const toast = useToast()
 const router = useRouter()
 const props = defineProps({
   id: {
@@ -15,11 +17,11 @@ const props = defineProps({
 })
 const newAdmin = () => {
   return {
-    id: null,
     name: '',
     email: '',
     password: '',
-    password_confirmation: ''
+    custom_options: null,
+    custom_data: null
   }
 }
 
@@ -52,14 +54,12 @@ const save = async (userToSave) => {
     try {
       const response = await axios.post('/users', userToSave)
       admin.value = response.data.data
+      console.log("Admin")
+      console.log(admin.value)
       originalValueStr = JSON.stringify(admin.value)
       toast.success('User #' + admin.value.id + ' was registered successfully.')
 
-      /*await userStore.login({
-              username: user.value.email,
-              password: userToSave.password
-            })*/
-      router.push({ name: 'Dashboard' })
+      router.push({ name: 'Admins' })
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
