@@ -42,8 +42,6 @@ const transactionTitle = computed(() => {
 })
 
 const save = () => {
-    console.log("Editing Transaction")
-    console.log(editingTransaction.value)
     emit('save', editingTransaction.value)
 }
 
