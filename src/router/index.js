@@ -1,4 +1,3 @@
-import { useUserStore } from '../stores/user'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "../stores/user.js"
 import Dashboard from '../components/Dashboard.vue'
@@ -15,9 +14,6 @@ import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
 import Statistics from "../components/statistics/Statistics.vue"
-
-let handlingFirstRoute = true
-
 
 let handlingFirstRoute = true
 const router = createRouter({
@@ -143,6 +139,9 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if ((to.name == 'Login') || (to.name == 'Dashboard') || (to.name == 'NewVCard')) {
+    next()
+    return
+  }
 
   if (!userStore.user) {
     next({ name: 'Login' })
@@ -197,6 +196,7 @@ router.beforeEach(async (to, from, next) => {
       return
     }
   }
+
   next()
 })
 
