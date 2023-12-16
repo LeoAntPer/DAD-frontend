@@ -1,17 +1,17 @@
 <script setup>
-import { inject, ref, watch } from 'vue'
+import { inject, ref, watch, onMounted, computed } from 'vue'
 import { useUserStore } from '../stores/user';
+import { useTransactionStore } from '../stores/transaction';
 import { useRouter } from 'vue-router'
+import TransactionTable from './transactions/TransactionTable.vue';
 
 const axios = inject('axios')
 const router = useRouter()
 const userStore = useUserStore()
+const transactionStore = useTransactionStore()
 
 const user = ref(null)
-
-const setupTransfer = () => {
-  router.push({ name: '' })
-}
+const latestTransactions = ref([])
 
 const loadUser = async (id) => {
   if(userStore.userType == 'V') {
@@ -33,6 +33,18 @@ watch(
   },
   { immediate: true }
 )
+
+const loadLatestTransactions = async () => {
+   latestTransactions.value = await transactionStore.loadLatestTransactions()
+}
+
+const editTransaction = (transaction) => {
+  router.push({ name: 'Transaction', params: { id: transaction.id } })
+}
+
+onMounted(() => {
+    loadLatestTransactions()
+})
 
 const newTransaction = () => {
   router.push({ name: 'NewTransaction' })
@@ -60,11 +72,16 @@ const newTransaction = () => {
     <div class="text-center">
       <h3>Balance:</h3>
       <h3 v-if="user">{{ user.balance }}€</h3>
-      <button type="button" class="btn btn-primary px-4" @click="setupTransfer">Transfer Money</button>
+      <button type="button" class="btn btn-primary px-4" @click="newTransaction">Transfer Money</button>
     </div>
     <hr>
     <div>
       <h3>Latest Transactions</h3>
+      <div class="card">
+        <TransactionTable :transactions="latestTransactions" @edit="editTransaction">
+
+        </TransactionTable>
+      </div>
     </div>
   </div>
   <button v-if="userStore.userType == 'A'" type="button" class="btn btn-success px-4 btn-addprj" @click="newTransaction">

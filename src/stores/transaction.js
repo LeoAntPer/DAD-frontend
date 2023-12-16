@@ -9,6 +9,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     const userStore = useUserStore()
 
     const transactions = ref([])
+    const latestTransactions = ref([])
 
     const totalTransactions = computed(() => {
         return transactions.value.length
@@ -22,6 +23,17 @@ export const useTransactionStore = defineStore('transaction', () => {
         }
         catch (error) {
             clearTransactions()
+            throw error
+        }
+    }
+
+    async function loadLatestTransactions() {
+        try {
+            const response = await axios.get(`vcards/${userStore.userId}/latest-transactions`)
+            latestTransactions.value = response.data.data
+            return latestTransactions.value
+        } catch(error) {
+            latestTransactions.value = []
             throw error
         }
     }
@@ -74,6 +86,7 @@ export const useTransactionStore = defineStore('transaction', () => {
         transactions,
         totalTransactions,
         loadTransactions,
+        loadLatestTransactions,
         clearTransactions,
         getTransactionsByFilter,
         getTransactionsByFilterTotal,
