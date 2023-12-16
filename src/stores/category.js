@@ -16,8 +16,17 @@ export const useCategoryStore = defineStore('category', () => {
 
     async function loadCategories() {
         try {
-            const response = await axios.get('categories')
-            categories.value = response.data.data
+            await axios.get('auth/me')
+            if(userStore.userType == 'A')
+            {
+                const response = await axios.get('defaultCategories')
+                categories.value = response.data.data
+            }
+            else if(userStore.userId != -1 && userStore.userType == 'V')
+            {
+                const response = await axios.get('categories')
+                categories.value = response.data.data
+            }
             return categories.value
         }
         catch (error) {
@@ -32,24 +41,49 @@ export const useCategoryStore = defineStore('category', () => {
 
 
     function getCategoriesByFilter(type) {
-        return categories.value.filter( cat => 
+        if(userStore.userType == 'A')
+        {
+            return categories.value.filter( cat => 
+            (!type || cat.type == type))
+        }
+        else
+        {
+            return categories.value.filter( cat => 
             (cat.vcard == userStore.userId) &&
-            (!type || cat.type == type)
-        )
+            (!type || cat.type == type))
+        }
     }
 
     function getCategoriesByFilterTotal(type) {
-        return categories.value.filter( cat => 
+        if(userStore.userType == 'A')
+        {
+            return categories.value.filter( cat => 
+            (!type || cat.type == type)).length
+        }
+        else
+        {
+            return categories.value.filter( cat => 
             (cat.vcard == userStore.userId) &&
-            (!type || cat.type == type)
-        ).length
+            (!type || cat.type == type)).length
+        }
+        
     }
 
     async function insertCategory(newCategory) {
         // Note that when an error occours, the exception should be
         // catch by the function that called the insertProject
-        const response = await axios.post('categories', newCategory)
-        categories.value.push(response.data.data)
+        var response = 0;
+        if(userStore.userType == 'A')
+        {
+            response = await axios.post('defaultCategories', newCategory)
+            categories.value.push(response.data.data)
+        }
+        else
+        {
+            response = await axios.post('categories', newCategory)
+            categories.value.push(response.data.data)
+        }
+        
         //socket.emit('newProject', response.data.data)
         return response.data.data
     }
@@ -64,8 +98,18 @@ export const useCategoryStore = defineStore('category', () => {
     async function updateCategory(updateCategory) {
         // Note that when an error occours, the exception should be
         // catch by the function that called the updateProject
-        const response = await axios.put('categories/' + updateCategory.id, updateCategory)
-        updateCategoryOnArray(response.data.data)
+        var response;
+        if(userStore.userType == 'A')
+        {
+            response = await axios.put('defaultCategories/' + updateCategory.id, updateCategory)
+            updateCategoryOnArray(response.data.data)
+        }
+        else
+        {
+            response = await axios.put('categories/' + updateCategory.id, updateCategory)
+            updateCategoryOnArray(response.data.data)
+        }
+        
         //socket.emit('updateProject', response.data.data)
         return response.data.data
     }
@@ -80,8 +124,18 @@ export const useCategoryStore = defineStore('category', () => {
     async function deleteCategory( deleteCategory) {
         // Note that when an error occours, the exception should be
         // catch by the function that called the deleteProject
-        const response = await axios.delete('categories/' + deleteCategory.id)
-        deleteCategoryOnArray(response.data.data)
+        var response;
+        if(userStore.userType == 'A')
+        {
+            response = await axios.delete('defaultCategories/' + deleteCategory.id)
+            deleteCategoryOnArray(response.data.data)
+        }
+        else
+        {
+            response = await axios.delete('categories/' + deleteCategory.id)
+            deleteCategoryOnArray(response.data.data)
+        }
+        
         //socket.emit('deleteProject', response.data.data)
         return response.data.data
     }

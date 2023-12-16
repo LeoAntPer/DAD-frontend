@@ -1,3 +1,4 @@
+import { useUserStore } from '../stores/user'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "../stores/user.js"
 import Dashboard from '../components/Dashboard.vue'
@@ -13,6 +14,9 @@ import VCards from "../components/vcards/VCards.vue"
 import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
+import Statistics from "../components/statistics/Statistics.vue"
+
+let handlingFirstRoute = true
 
 
 let handlingFirstRoute = true
@@ -126,7 +130,7 @@ const router = createRouter({
     {
       path: '/statistics',
       name: 'Statistics',
-      component: Categories,
+      component: Statistics,
     },
   ]
 })
@@ -137,14 +141,14 @@ router.beforeEach(async (to, from, next) => {
     handlingFirstRoute = false
     await userStore.restoreToken()
   }
+
   if ((to.name == 'Login') || (to.name == 'Dashboard') || (to.name == 'NewVCard')) {
-    next()
-    return
-  }
+
   if (!userStore.user) {
     next({ name: 'Login' })
     return
   }
+
   if (to.name == 'Admins') {
     if (userStore.userType != 'A') {
       next({ name: 'Dashboard' })
@@ -184,6 +188,14 @@ router.beforeEach(async (to, from, next) => {
     }
     next({ name: 'Dashboard' })
     return
+  }
+  
+  // Transactions authorization
+  if (['Transactions', 'Transaction'].includes(to.name)) {
+    if (userStore.userType != 'V') {
+      next({ name: 'Dashboard' })
+      return
+    }
   }
   next()
 })

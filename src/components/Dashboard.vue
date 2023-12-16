@@ -33,6 +33,11 @@ watch(
   },
   { immediate: true }
 )
+
+const newTransaction = () => {
+  router.push({ name: 'NewTransaction' })
+}
+
 </script>
 
 <template>
@@ -62,5 +67,9 @@ watch(
       <h3>Latest Transactions</h3>
     </div>
   </div>
+  <button v-if="userStore.userType == 'A'" type="button" class="btn btn-success px-4 btn-addprj" @click="newTransaction">
+        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Register
+        Transaction
+      </button>
 </template>
   

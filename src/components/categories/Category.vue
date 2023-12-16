@@ -24,7 +24,16 @@ const newCategory = () => {
   }
 }
 
+const newDefaultCategory = () => { 
+  return {
+    id: null,
+    name: '',
+    type: '',
+  }
+}
+
 const category = ref(newCategory())
+const defaultCategory = ref(newDefaultCategory())
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
 // String with the JSON representation after loading the category (new or edit)
@@ -34,12 +43,29 @@ const loadCategory = async (id) => {
     originalValueStr = ''
     errors.value = null
     if (!id || (id < 0)) {
-      category.value = newCategory()
-      originalValueStr = JSON.stringify(category.value)
+      if(userStore.userType == 'A')
+      {
+        defaultCategory.value = newDefaultCategory()
+        originalValueStr = JSON.stringify(category.value)
+      }
+      else
+      {
+        category.value = newCategory()
+        originalValueStr = JSON.stringify(category.value)
+      }
+      
     } else {
       try {
-        const response = await axios.get('categories/' + id)
-        category.value = response.data.data
+        if(userStore.userType == 'A')
+        {
+          const response = await axios.get('defaultCategories/' + id)
+          category.value = response.data.data
+        }
+        else
+        {
+          const response = await axios.get('categories/' + id)
+          category.value = response.data.data
+        }
         originalValueStr = JSON.stringify(category.value)
       } catch (error) {
         console.log(error)
@@ -65,10 +91,10 @@ const save = async () => {
     }
   } else {
     try {
-      category.value = await categoryStore.updateCategory(category.value)
-      originalValueStr = JSON.stringify(category.value)
-      toast.success('Category #' + category.value.id + ' was updated successfully.')
-      router.back()
+        category.value = await categoryStore.updateCategory(category.value)
+        originalValueStr = JSON.stringify(category.value)
+        toast.success('Category #' + category.value.id + ' was updated successfully.')
+        router.back()
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
