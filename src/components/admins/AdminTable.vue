@@ -1,7 +1,11 @@
 <script setup>
+import { useToast } from 'vue-toast-notification';
 import { useUserStore } from '../../stores/user';
+import { inject } from 'vue';
 
 const userStore = useUserStore()
+const toast = useToast()
+const axios = inject('axios')
 
 const props = defineProps({
   admins: {
@@ -22,17 +26,31 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["edit"])
+const emit = defineEmits(["edit","deleted"])
 
-const editClick = (user) => {
-  emit("edit", user)  
+const editClick = (admin) => {
+  emit("edit", admin)  
 }
 
-const canViewUserDetail = () => {
-    if(!userStore.user || userStore.userType == 'V'){
-        return false
+const deleteAdmin = async (admin) => {
+  const isConfirmed = window.confirm('Are you sure you want to delete Admin ' + admin.id + '?');
+
+  if(isConfirmed) {
+    try {
+      const response = await axios.delete('/users/' + admin.id)
+      let deletedAdmin = response.data.data
+      toast.info('Admin ' + admin.id + ' was deleted')
+      emit('deleted', deletedAdmin)
     }
-    return userStore.userType == 'A'
+    catch(error) {
+      console.log(error)
+      toast.error('Error occurred while deleting Admin')
+    }
+  }
+}
+
+const canViewUserDetail = (id) => {
+    return userStore.userId == id
 }
 </script>
 
@@ -50,13 +68,17 @@ const canViewUserDetail = () => {
           <td v-if="showId" class="align-middle">{{ admin.id }}</td>
           <td class="align-middle">{{ admin.name }}</td>
           <td v-if="showEmail" class="align-middle">{{ admin.email }}</td>          <td class="text-end align-middle" v-if="showEditButton">
-            <div class="d-flex justify-content-end" v-if="canViewUserDetail()">
+            <div class="d-flex justify-content-end">
               <button
                 class="btn btn-xs btn-light"
                 @click="editClick(admin)"
-                v-if="showEditButton"
+                v-if="canViewUserDetail(admin.id)"
               >
                 <i class="bi bi-xs bi-pencil"></i>
+              </button>
+
+              <button class="btn btn-xs btn-danger" @click="deleteAdmin(admin)">
+                <i class="bi bi-xs bi-trash"></i>
               </button>
             </div>
           </td>

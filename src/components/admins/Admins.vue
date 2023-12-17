@@ -2,10 +2,11 @@
 import { useRouter } from 'vue-router'
 import { ref, onMounted, inject, computed } from 'vue'
 import AdminTable from './AdminTable.vue'
+import { useToast } from 'vue-toast-notification';
 
 const axios = inject('axios')
 const router = useRouter()
-
+const toast = useToast()
 const admins = ref([])
 
 // const totalUsers = computed(() => {
@@ -27,6 +28,13 @@ const createAdmin = () => {
 
 const editUser = (admin) => {
   router.push({ name: 'Admin', params: { id: admin.id } })
+}
+
+const deletedAdmin = (deletedAdmin) => {
+    let idx = admins.value.findIndex((t) => t.id === deletedAdmin.id)
+    if (idx >= 0) {
+      admins.value.splice(idx, 1)
+    }
 }
 
 const totalAdmins = computed( () => {
@@ -57,7 +65,7 @@ onMounted(() => {
       ><i class="bi bi-xs bi-plus-circle"></i>&nbsp; Create New Admin</button>
     </div>
   
-  <admin-table :admins="admins" :showId="false" @edit="editUser"></admin-table>
+  <admin-table :admins="admins" :showId="false" @edit="editUser" @delete="deletedAdmin"></admin-table>
 </template>
 
 <style scoped>
