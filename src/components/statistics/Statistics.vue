@@ -7,33 +7,27 @@ import { useUserStore } from '../../stores/user'
 const statistics = ref(null)
 const axios = inject('axios')
 const userStore = useUserStore()
-
 /*
 const userId = computed(() => {
   return userStore.userId
 })
 */
-
 const loadStatistics = async () => {
   try {
-    if(userStore.userType == 'A')
-    {
+    if(userStore.userType == 'A') {
       const response = await axios.get('/statistics')
       statistics.value = response.data
     }
-    else
-    {
+    else {
       const response = await axios.get('/statistics/' + userStore.userId)
       statistics.value = response.data
     }
-
   } catch (error) {
     console.log(error)
   }
 }
 
 onMounted(() => {
-
     loadStatistics()
 })
 </script>
@@ -139,7 +133,7 @@ onMounted(() => {
   <div v-if="statistics && userStore.userType == 'V'" class="container mt-5">
     <div class="row">
       <div class="col-12 col-lg-6" v-if="statistics">
-        <h4>Transações/mês</h4>
+        <h4>Balanço/mês</h4>
         <LineChart :data="statistics['balance_by_month']" :label="'Balanço (€)'" />
       </div>
     </div>

@@ -1,12 +1,13 @@
 import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
 import { useUserStore } from './user.js'
-//import { useToast } from 'vue-toast-notification'
+import { useToast } from 'vue-toast-notification'
 
 export const useTransactionStore = defineStore('transaction', () => {
-    //const toast = useToast()
+    const toast = useToast()
     const axios = inject('axios')
     const userStore = useUserStore()
+    const socket = inject('socket')
 
     const transactions = ref([])
     const latestTransactions = ref([])
@@ -59,7 +60,9 @@ export const useTransactionStore = defineStore('transaction', () => {
     async function insertTransaction(newTransaction) {
         const response = await axios.post('transactions', newTransaction)
         transactions.value.push(response.data.data)
-        //socket.emit('newProject', response.data.data)
+        //socket.emit('joinRoom', response.data.data.payment_reference)
+        socket.emit('newTransaction', response.data.data)
+        //socket.emit('leaveRoom', response.data.data.payment_reference)
         return response.data.data
     }
 
@@ -80,6 +83,10 @@ export const useTransactionStore = defineStore('transaction', () => {
         return response.data.data
     }
 
+    socket.on('newTransaction', (transaction) => {
+        transactions.value.push(transaction)
+        toast.success('You have a new transaction!')
+    }) 
 
 
     return {

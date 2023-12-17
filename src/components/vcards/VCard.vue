@@ -5,6 +5,7 @@ import VCardDetail from './VCardDetail.vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 
+const socket = inject("socket")
 const axios = inject('axios')
 const toast = useToast()
 const userStore = useUserStore()
@@ -68,6 +69,7 @@ const save = async (userToSave) => {
               username: userToSave.phone_number,
               password: userToSave.password
             })
+      socket.emit('insertedUser', vcard.value)
       router.push({ name: 'Dashboard' })
     } catch (error) {
       if (error.response.status == 422) {
@@ -87,7 +89,7 @@ const save = async (userToSave) => {
               await userStore.loadUser()
             }
 
-      //socket.emit('updatedUser', user.value)
+      socket.emit('updatedUser', vcard.value)
 
       router.back()
     } catch (error) {
