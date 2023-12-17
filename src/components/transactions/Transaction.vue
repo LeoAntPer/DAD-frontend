@@ -30,7 +30,8 @@ const newTransaction = () => {
     description: null,
     category_id: null,
     custom_options: null,
-    custom_data: null
+    custom_data: null,
+    confirmation_code: null
   }
 }
 

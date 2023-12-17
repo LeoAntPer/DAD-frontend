@@ -62,7 +62,8 @@ const isInsertOperation = ref(props.operationType == 'insert')
         <div class="mb-3" v-if="userStore.userType == 'A'">
             <label for="inputVCard" class="form-label">VCard</label>
             <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['vcard'] : false }"
-                id="inputVCard" placeholder="Phone number" v-model="editingTransaction.vcard" :disabled="!isInsertOperation">
+                id="inputVCard" placeholder="Phone number" v-model="editingTransaction.vcard"
+                :disabled="!isInsertOperation">
             <field-error-message :errors="errors" fieldName="vcard"></field-error-message>
         </div>
 
@@ -77,9 +78,9 @@ const isInsertOperation = ref(props.operationType == 'insert')
         <!--PAYMENT TYPE-->
         <div class="mb-3">
             <label for="inputPaymentTipe" class="form-label">Payment Type</label>
-            <select class="form-select pe-2" :class="{ 'is-invalid': errors ? errors['payment_type'] : false }" :disabled="!isInsertOperation"
-                id="inputPaymentType" v-model="editingTransaction.payment_type">
-                <option>VCARD</option>
+            <select class="form-select pe-2" :class="{ 'is-invalid': errors ? errors['payment_type'] : false }"
+                :disabled="!isInsertOperation" id="inputPaymentType" v-model="editingTransaction.payment_type">
+                <option v-if="userStore.userType == 'V'">VCARD</option>
                 <option>MBWAY</option>
                 <option>PAYPAL</option>
                 <option>IBAN</option>
@@ -93,12 +94,13 @@ const isInsertOperation = ref(props.operationType == 'insert')
         <div class="mb-3">
             <label for="inputPaymentReference" class="form-label">Payment Reference</label>
             <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['payment_value'] : false }"
-                id="inputPaymentReference" placeholder="Reference" v-model="editingTransaction.payment_reference" :disabled="!isInsertOperation">
+                id="inputPaymentReference" placeholder="Reference" v-model="editingTransaction.payment_reference"
+                :disabled="!isInsertOperation">
             <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
         </div>
 
         <!--DESCRIPTION-->
-        <div class="mb-3">
+        <div class="mb-3" v-if="userStore.userType == 'V'">
             <label for="inputDescription" class="form-label">Description</label>
             <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['description'] : false }"
                 id="inputDescription" placeholder="Description" v-model="editingTransaction.description">
@@ -106,7 +108,7 @@ const isInsertOperation = ref(props.operationType == 'insert')
         </div>
 
         <!--CATEGORY-->
-        <div class="mb-3">
+        <div class="mb-3" v-if="userStore.userType == 'V'">
             <label for="inputCategory" class="form-label">Category</label>
             <select class="form-select pe-2" :class="{ 'is-invalid': errors ? errors['category_id'] : false }"
                 id="inputCategory" v-model="editingTransaction.category_id">
@@ -116,12 +118,21 @@ const isInsertOperation = ref(props.operationType == 'insert')
             <field-error-message :errors="errors" fieldName="category_id"></field-error-message>
         </div>
 
+        <!--CONFIRMATION CODE-->
+        <div class="mb-3" v-if="userStore.userType == 'V'">
+            <label for="inputCode" class="form-label">Confirmation Code</label>
+            <input type="number" class="form-control"
+                :class="{ 'is-invalid': errors ? errors['confirmation_code'] : false }" id="inputCode"
+                v-model="editingTransaction.confirmation_code" />
+            <field-error-message :errors="errors" fieldName="confirmation_code"></field-error-message>
+        </div>
 
         <!--BUTTONS-->
         <div v-if="!props.readOnly" class="mb-3 d-flex justify-content-end">
             <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
             <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
         </div>
+
     </form>
 </template>
 
