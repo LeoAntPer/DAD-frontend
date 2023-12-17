@@ -51,8 +51,7 @@ const logout = async () => {
 const deleteUser= async () => {
   const user = ref(null)
   if(userStore.userType == 'V') {
-     const response = await axios.delete("/vcards/" + userStore.userId)
-     user.value = response.data.data
+     router.push({ name: 'DeleteVcard' })
   }
   else {
     const response = await axios.delete("/users/" + userStore.userId)
@@ -199,10 +198,11 @@ onMounted(() => {
               <span>User</span>
             </h6>
             <ul class="nav flex-column mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-person-check-fill"></i>
+              <li class="nav-item" v-show="!userStore.user">
+                <router-link class="nav-link" :class="{ active: $route.name === 'NewVCard' }" :to="{ name: 'NewVCard' }" @click="clickMenuOption">
+                  <i class="bi bi-person-check-fill"></i>
                   Register
-                </a>
+                </router-link>
               </li>
               <li class="nav-item" v-show="!userStore.user">
                 <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
@@ -211,33 +211,35 @@ onMounted(() => {
                   Login
                 </router-link>
               </li>
-              <li class="nav-item dropdown" v-show="userStore.user">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
-                  <span class="avatar-text">{{ userStore.userName }}</span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      <i class="bi bi-person-square"></i>Profile</a>
-                  </li>
-                  <li>
-                    <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                      :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
-                      <i class="bi bi-key-fill"></i>
-                      Change password
-                    </router-link>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li v-show="userStore.user">
-                    <a class="dropdown-item" @click.prevent="logout">
-                      <i class="bi bi-arrow-right"></i>Logout
-                    </a>
-                  </li>
-                </ul>
+              <li>
+                <router-link class="dropdown-item" :class="{ active: $route.name === (userStore.userType === 'V' ? 'VCard' : 'Admin') }"
+                :to="getProfileLink" @click="clickMenuOption">
+                  <i class="bi bi-person-square"></i>
+                  Profile
+                </router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                  :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change password
+                </router-link>
+              </li>
+              <li v-if="userStore.userType === 'V'">
+                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeConfirmationCode' }"
+                  :to="{ name: 'ChangeConfirmationCode' }" @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change confirmation code
+                </router-link>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <a class="dropdown-item" @click.prevent="logout"><i class="bi bi-arrow-right"></i>Logout</a>
+              </li>
+              <li>
+                <a class="dropdown-item" @click.prevent="deleteUser"><i class="bi bi-x"></i>Delete VCard</a>
               </li>
             </ul>
           </div>

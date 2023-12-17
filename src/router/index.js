@@ -10,6 +10,7 @@ import Category from "../components/categories/Category.vue"
 import Categories from "../components/categories/Categories.vue"
 import VCard from "../components/vcards/VCard.vue"
 import VCards from "../components/vcards/VCards.vue"
+import VCardDelete from "../components/vcards/VCardDelete.vue"
 import Admin from "../components/admins/Admin.vue"
 import Admins from "../components/admins/Admins.vue"
 import HomeView from "../views/HomeView.vue"
@@ -101,6 +102,11 @@ const router = createRouter({
       name: 'VCards',
       component: VCards,
     },
+    {
+      path: '/delete-me',
+      name: 'DeleteVcard',
+      component: VCardDelete
+    },
 
     //Admin  
     {
@@ -138,9 +144,16 @@ router.beforeEach(async (to, from, next) => {
     await userStore.restoreToken()
   }
 
-  if ((to.name == 'Login') || (to.name == 'Dashboard') || (to.name == 'NewVCard')) {
+  if ((to.name == 'Login') || (to.name == 'NewVCard')) {
     next()
     return
+  }
+
+  if (to.name == 'Dashboard') {
+    if(!userStore.user) {
+      next({ name: 'Login' })
+      return
+    }
   }
 
   if (!userStore.user) {
@@ -179,6 +192,12 @@ router.beforeEach(async (to, from, next) => {
     }
     next({ name: 'Dashboard' })
     return
+  }
+  if (to.name == 'DeleteVCard') {
+    if (userStore.userType != 'V') {
+      next({ name: 'Dashboard' })
+      return
+    }
   }
   if(to.name == 'NewVCard') {
     if(!userStore.user) {

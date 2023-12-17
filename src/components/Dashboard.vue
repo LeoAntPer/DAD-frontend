@@ -75,7 +75,7 @@ const newTransaction = () => {
       <button type="button" class="btn btn-primary px-4" @click="newTransaction">Transfer Money</button>
     </div>
     <hr>
-    <div>
+    <div v-if="latestTransactions.length > 0">
       <h3>Latest Transactions</h3>
       <div class="card">
         <TransactionTable :transactions="latestTransactions" @edit="editTransaction">

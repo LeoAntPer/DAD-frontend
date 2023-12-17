@@ -29,7 +29,7 @@ const props = defineProps({
     },
 })
 
-const emit = defineEmits(["edit"])
+const emit = defineEmits(["edit","block","unblock","delete"])
 
 const photoFullUrl = (vcard) => {
     return vcard.photo_url
@@ -39,6 +39,18 @@ const photoFullUrl = (vcard) => {
 
 const editClick = (vcard) => {
     emit("edit", vcard)
+}
+
+const blockVcard = (vcard) => {
+  emit("block", vcard)
+}
+
+const unblockVcard = (vcard) => {
+  emit("unblock", vcard)
+}
+
+const deleteVcard = (vcard) => {
+  emit("delete", vcard)
 }
 
 const canViewUserDetail = (userId) => {
@@ -57,6 +69,7 @@ const canViewUserDetail = (userId) => {
           <th v-if="showPhoto" class="align-middle">Photo</th>
           <th class="align-middle">Name</th>
           <th v-if="showEmail" class="align-middle">Email</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -68,13 +81,27 @@ const canViewUserDetail = (userId) => {
           <td class="align-middle">{{ vcard.name }}</td>
           <td v-if="showEmail" class="align-middle">{{ vcard.email }}</td>
           <td class="text-end align-middle" v-if="showEditButton">
-            <div class="d-flex justify-content-end" v-if="canViewUserDetail(vcard.phone_number)">
+            <div class="d-flex justify-content-end" v-if="canViewUserDetail(userStore.userId)">
               <button
                 class="btn btn-xs btn-light"
                 @click="editClick(vcard)"
                 v-if="showEditButton"
               >
                 <i class="bi bi-xs bi-pencil"></i>
+              </button>
+
+              <button class="btn btn-xs btn-success" v-if="vcard.blocked == 0" @click="blockVcard(vcard)">
+                <i class="bi bi-xs bi-lock"></i>
+              </button>
+
+              <button class="btn btn-xs btn-danger" v-if="vcard.blocked == 1" @click="unblockVcard(vcard)">
+                <i class="bi bi-xs bi-lock-fill"></i>
+              </button>
+
+              <button
+              class="btn btn-xs btn-danger"
+              @click="deleteVcard(vcard)">
+                <i class="bi bi-xs bi-trash"></i>
               </button>
             </div>
           </td>
