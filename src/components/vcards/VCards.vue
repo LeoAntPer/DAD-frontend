@@ -23,9 +23,9 @@ const editUser = (vcard) => {
     router.push({name: 'VCard', params: {phone_number: vcard.phone_number}})
 }
 
-const blockVcard = (vcard) => {
+const blockVcard = async (vcard) => {
     try {
-        axios.patch("vcards/" + vcard.phone_number + "/blocked", {blocked: 1})
+        await axios.patch("vcards/" + vcard.phone_number + "/blocked", {blocked: 1})
         toast.success('VCard ' + vcard.phone_number + ' was blocked!')
         loadVCards()
     }
@@ -35,9 +35,9 @@ const blockVcard = (vcard) => {
     }
 }
 
-const unblockVcard = (vcard) => {
+const unblockVcard = async (vcard) => {
     try {
-        axios.patch("vcards/" + vcard.phone_number + "/blocked", {blocked: 0})
+        await axios.patch("vcards/" + vcard.phone_number + "/blocked", {blocked: 0})
         toast.success('VCard ' + vcard.phone_number + ' was unblocked!')
         loadVCards()
     }
@@ -47,10 +47,11 @@ const unblockVcard = (vcard) => {
     }
 }
 
-const deleteVcard = (vcard) => {
+const deleteVcard = async (vcard) => {
     try {
-        axios.delete("vcards/" + vcard.phone_number + '/admin')
+        await axios.delete("vcards/" + vcard.phone_number + '/admin')
         toast.success('VCard' + vcard.phone_number + ' was deleted!')
+        loadVCards()
     } catch(error) {
         console.log(error)
         toast.error('Error occured while deleting VCard' + vcard.phone_number)

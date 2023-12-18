@@ -145,8 +145,11 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if ((to.name == 'Login') || (to.name == 'NewVCard')) {
+    if(userStore.user) {
+      next({ name: 'Dashboard' })
+      return
+    }
     next()
-    return
   }
 
   if (to.name == 'Dashboard') {

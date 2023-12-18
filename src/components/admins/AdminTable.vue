@@ -1,11 +1,7 @@
 <script setup>
-import { useToast } from 'vue-toast-notification';
 import { useUserStore } from '../../stores/user';
-import { inject } from 'vue';
 
 const userStore = useUserStore()
-const toast = useToast()
-const axios = inject('axios')
 
 const props = defineProps({
   admins: {
@@ -26,27 +22,14 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["edit","deleted"])
+const emit = defineEmits(["edit","delete"])
 
 const editClick = (admin) => {
   emit("edit", admin)  
 }
 
-const deleteAdmin = async (admin) => {
-  const isConfirmed = window.confirm('Are you sure you want to delete Admin ' + admin.id + '?');
-
-  if(isConfirmed) {
-    try {
-      const response = await axios.delete('/users/' + admin.id)
-      let deletedAdmin = response.data.data
-      toast.info('Admin ' + admin.id + ' was deleted')
-      emit('deleted', deletedAdmin)
-    }
-    catch(error) {
-      console.log(error)
-      toast.error('Error occurred while deleting Admin')
-    }
-  }
+const deleteAdmin = (admin) => {
+  emit("delete", admin)
 }
 
 const canViewUserDetail = (id) => {

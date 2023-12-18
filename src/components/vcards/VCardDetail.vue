@@ -53,7 +53,7 @@ const userTitle = computed(() => {
   if (!editingUser.value) {
     return ''
   }
-  return props.inserting ? 'Register a new user' : 'VCard #' + editingUser.value.phone_number
+  return props.inserting ? 'Register a new VCard' : 'VCard #' + editingUser.value.phone_number
 })
 
 const save = () => {

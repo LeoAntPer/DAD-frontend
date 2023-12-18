@@ -4,9 +4,9 @@ import { ref, onMounted, inject, computed } from 'vue'
 import AdminTable from './AdminTable.vue'
 import { useToast } from 'vue-toast-notification';
 
+const toast = useToast()
 const axios = inject('axios')
 const router = useRouter()
-const toast = useToast()
 const admins = ref([])
 
 // const totalUsers = computed(() => {
@@ -30,11 +30,22 @@ const editUser = (admin) => {
   router.push({ name: 'Admin', params: { id: admin.id } })
 }
 
-const deletedAdmin = (deletedAdmin) => {
-    let idx = admins.value.findIndex((t) => t.id === deletedAdmin.id)
-    if (idx >= 0) {
-      admins.value.splice(idx, 1)
-    }
+const deletedAdmin = async (admin) => {
+  const isConfirmed = window.confirm('Are you sure you want to delete Admin ' + admin.id + '?');
+
+if(isConfirmed) {
+  try {
+    const response = await axios.delete('/users/' + admin.id)
+    const deletedAdmin = response.data.data
+    toast.info('Admin ' + deletedAdmin.id + ' was deleted')
+    loadUsers()
+    
+  }
+  catch(error) {
+    console.log(error)
+    toast.error('Error occurred while deleting Admin')
+  }
+}
 }
 
 const totalAdmins = computed( () => {

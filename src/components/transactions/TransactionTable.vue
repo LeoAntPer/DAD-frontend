@@ -32,7 +32,7 @@ const editClick = (transaction) => {
     </thead>
     <tbody>
       <tr v-for="transaction in transactions" :key="transaction.id">
-        <td>{{ (transaction.type == 'D' ? '-' : '+') + transaction.value }}</td>
+        <td :style="{ color: transaction.type == 'D' ? 'red' : 'green' }">{{ (transaction.type == 'D' ? '-' : '+') + transaction.value }}</td>
         <!--td>{{ transaction.type == 'D' ? 'Debit' : 'Credit' }}</td-->
         <td>{{ transaction.new_balance }}</td>
         <td>{{ transaction.old_balance }}</td>
