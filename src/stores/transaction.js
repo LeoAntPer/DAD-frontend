@@ -60,9 +60,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     async function insertTransaction(newTransaction) {
         const response = await axios.post('transactions', newTransaction)
         transactions.value.push(response.data.data)
-        //socket.emit('joinRoom', response.data.data.payment_reference)
         socket.emit('newTransaction', response.data.data)
-        //socket.emit('leaveRoom', response.data.data.payment_reference)
         return response.data.data
     }
 
@@ -79,13 +77,15 @@ export const useTransactionStore = defineStore('transaction', () => {
         // catch by the function that called the updateProject
         const response = await axios.put('transactions/' + updateTransaction.id, updateTransaction)
         updateTransactionOnArray(response.data.data)
-        //socket.emit('updateProject', response.data.data)
+        //socket.emit('updateTransaction', response.data.data)
         return response.data.data
     }
 
     socket.on('newTransaction', (transaction) => {
-        transactions.value.push(transaction)
-        toast.success('You have a new transaction!')
+        if (transaction.payment_reference == userStore.userId) {
+            transactions.value.push(transaction)
+            toast.success('You have a new transaction!')
+        }
     }) 
 
 

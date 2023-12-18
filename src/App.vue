@@ -72,8 +72,10 @@ onMounted(() => {
   <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
       <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
-        <img src="@/assets/logo.png" alt="" width="40" height="40" class="d-inline-block ">
-        VCard
+        <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }" :to="{ name: 'Dashboard' }">
+          <img src="@/assets/logo.png" alt="" width="40" height="40" class="d-inline-block ">
+          VCard
+        </router-link>
       </a>
       <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
         @click="clickMenuOption" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
