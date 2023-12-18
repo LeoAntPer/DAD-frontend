@@ -9,6 +9,7 @@ const axios = inject('axios')
 const router = useRouter()
 const userStore = useUserStore()
 const transactionStore = useTransactionStore()
+const socket = inject('socket')
 
 const user = ref(null)
 const latestTransactions = ref([])
@@ -45,6 +46,10 @@ const editTransaction = (transaction) => {
 onMounted(() => {
     loadLatestTransactions()
 })
+
+socket.on('newTransaction', () => {
+        loadLatestTransactions()
+    }) 
 
 const newTransaction = () => {
   router.push({ name: 'NewTransaction' })
