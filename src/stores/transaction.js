@@ -56,11 +56,11 @@ export const useTransactionStore = defineStore('transaction', () => {
             (category == -1 || transaction.category_id == category)
         ).length
     }
-    
+
     async function insertTransaction(newTransaction) {
         const response = await axios.post('transactions', newTransaction)
         transactions.value.push(response.data.data)
-        socket.emit('newTransaction')
+        socket.emit('newTransaction', response.data.data)
         return response.data.data
     }
 
@@ -81,10 +81,13 @@ export const useTransactionStore = defineStore('transaction', () => {
         return response.data.data
     }
 
-    socket.on('newTransaction', () => {
-        loadTransactions()
-        loadLatestTransactions()
-        toast.success('You have a new transaction!')
+    socket.on('newTransaction', (transaction) => {
+        if ((transaction.payment_reference == userStore.userId && transaction.type == 'D') || 
+            (transaction.vcard == userStore.userId && transaction.type == 'C')) {
+            loadTransactions()
+            loadLatestTransactions()
+            toast.success('You have a new transaction!')
+        }
     }) 
 
 

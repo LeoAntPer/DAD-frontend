@@ -47,9 +47,12 @@ onMounted(() => {
     loadLatestTransactions()
 })
 
-socket.on('newTransaction', () => {
-        loadLatestTransactions()
-    }) 
+socket.on('newTransaction', (transaction) => {
+  if ((transaction.payment_reference == userStore.userId && transaction.type == 'D') || 
+    transaction.vcard == userStore.userId && transaction.type == 'C') {
+    loadLatestTransactions(transaction)
+  }
+}) 
 
 const newTransaction = () => {
   router.push({ name: 'NewTransaction' })
