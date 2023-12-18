@@ -24,7 +24,7 @@ export const useCategoryStore = defineStore('category', () => {
             }
             else if(userStore.userId != -1 && userStore.userType == 'V')
             {
-                const response = await axios.get('categories')
+                const response = await axios.get('vcards/' + userStore.userId + '/categories')
                 categories.value = response.data.data
             }
             return categories.value
@@ -49,7 +49,6 @@ export const useCategoryStore = defineStore('category', () => {
         else
         {
             return categories.value.filter( cat => 
-            (cat.vcard == userStore.userId) &&
             (!type || cat.type == type))
         }
     }
